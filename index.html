@@ -1,0 +1,675 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siu Yau Shing (蕭佑丞) - Coding Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Futuristic glow effect */
+        .glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        /* Hover effect for project cards */
+        .project-card:hover, .experience-card:hover {
+            transform: translateY(-10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.7);
+        }
+        /* Reduced neon text glow */
+        .neon-text {
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.6);
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Custom cursor */
+        body {
+            cursor: none;
+        }
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+        /* Particle background container */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        
+        
+    </style>
+</head>
+<body class="bg-gray-900 font-sans text-gray-100">
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <!-- Navigation -->
+    <nav class="bg-gray-800 bg-opacity-90 text-white fixed w-full top-0 z-50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold neon-text">Siu Yau Shing (蕭佑丞), Shiloh</h1>
+            <ul class="flex items-center space-x-6 relative">
+            
+                <!-- Home -->
+                <li class="relative">
+                    <a href="#home" class="lang-en block hover:text-purple-400 transition-colors">Home</a>
+                    <a href="#home" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">首頁</a>
+                    <a href="#home" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">首页</a>
+                </li>
+
+                <!-- About -->
+                <li class="relative">
+                    <a href="#about" class="lang-en block hover:text-purple-400 transition-colors">About</a>
+                    <a href="#about" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">關於我</a>
+                    <a href="#about" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">关于我</a>
+                </li>
+
+                <!-- Projects -->
+                <li class="relative">
+                    <a href="#projects" class="lang-en block hover:text-purple-400 transition-colors">Projects</a>
+                    <a href="#projects" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">我的項目</a>
+                    <a href="#projects" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">我的項目</a>
+                </li>
+                <li class="relative">
+                    <a href="#experience" class="lang-en block hover:text-purple-400 transition-colors">Experience</a>
+                    <a href="#experience" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">經驗</a>
+                    <a href="#experience" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">经验</a>
+                </li>
+
+                <!-- Skills -->
+                <li class="relative">
+                    <a href="#skills" class="lang-en block hover:text-purple-400 transition-colors">Skills</a>
+                    <a href="#skills" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">技能</a>
+                    <a href="#skills" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">技能</a>
+                </li>
+
+                <!-- Contact -->
+                <li class="relative">
+                    <a href="#contact" class="lang-en block hover:text-purple-400 transition-colors">Contact</a>
+                    <a href="#contact" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">聯絡我</a>
+                    <a href="#contact" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">联络我</a>
+                </li>
+
+                <!-- Language Switcher -->
+                <li class="ml-6 flex items-center">
+                    <select id="language-switcher" class="bg-gray-700 text-white rounded px-2 py-1 text-sm">
+                        <option value="en" selected>English</option>
+                        <option value="zh-hant">繁體中文</option>
+                        <option value="zh-hans">简体中文</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 relative">
+        <div id="particles-js"></div>
+        <div class="text-center max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center relative z-10">
+            <!-- Profile Image -->
+            <div class="mb-6 md:mb-0 md:mr-8">
+            <div class="mt-16"> <!-- This matches your nav height (py-4 = 1rem = 16px) -->
+            <img src="static/images/profile.jpg" alt="Profile Picture" class="w-48 h-48 rounded-full border-4 border-blue-500 glow -mt-12 relative z-20">
+</div>
+                <!-- Place your profile image in 'static/images/profile.jpg' -->
+            </div>
+            <div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-en">Welcome to My Portfolio!</h1>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-zh-hant hidden">歡迎來到我的網站！</h1>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-zh-hans hidden">欢迎来到我的网站！</h1>
+
+                <p class="text-xl mb-6 lang-en">I'm a passionate student programming interesting projects in the Hong Kong Polytechnic University.</p>
+                <p class="text-xl mb-6 lang-zh-hant hidden">我是一名對科技與創新充滿熱情的軟體工程師，現在處於香港理工大學學習金融科技與人工智慧理學學士（榮譽）的學位</p>
+                <p class="text-xl mb-6 lang-zh-hans hidden">我是一名对科技与创新充满热情的软体工程师，现在处于香港理工大学学习金融科技与人工智慧理学学士（荣誉）的学位</p>
+
+                <a href="#projects" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-en">Click to View My Work!</a>
+                <a href="#projects" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-zh-hant hidden">點擊去看看我的作品吧！</a>
+                <a href="#projects" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-zh-hans hidden">点击去看看我的作品吧！</a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-en">About Me</h2>
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hant hidden">關於我</h2>
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hans hidden">关于我</h2>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-en">
+                    Hi, I'm Shiloh. I've lived in Hong Kong my entire life and am currently a student at The Hong Kong Polytechnic University. I’m deeply interested in building cutting-edge applications that integrate Artificial Intelligence. I'm passionate about using emerging technologies to create positive change in the world, and I enjoy working on projects that combine data analysis with AI integration. Outside of programming, I teach English and STEM subjects, play video games, and love reading books.
+            </p>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-zh-hant hidden">
+                大家好，我是蕭佑丞，是一個香港人，正在理工大學作爲一位學生。我對建立尖端技術非常感興趣，尤其是一些與人工智能結合的科技。我熱衷於利用新興技術為世界帶來正面的改變。同時，我也喜歡數據分析與人工智慧整合的項目。除了編程之外，我還教授英語和STEM學科，玩電子遊戲，並且熱愛閱讀。
+            </p>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-zh-hans hidden">
+                大家好，我是萧佑丞，是一个香港人，正在理工大学作为一位学生。我对建立尖端技术非常感兴趣，尤其是一些与人工智能结合的科技。我热衷于利用新兴技术为世界带来正面的改变。同时，我也喜欢数据分析与人工智慧整合的项目。除了编程之外，我还教授英语和STEM学科，玩电子游戏，并且热爱阅读。
+            </p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-en">Why Hire Me?</h2>
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hant hidden">關於我</h2>
+            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hans hidden">关于我</h2>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-en">
+                    Hi, I'm Shiloh. I've lived in Hong Kong my entire life and am currently a student at The Hong Kong Polytechnic University. I’m deeply interested in building cutting-edge applications that integrate Artificial Intelligence. I'm passionate about using emerging technologies to create positive change in the world, and I enjoy working on projects that combine data analysis with AI integration. Outside of programming, I teach English and STEM subjects, play video games, and love reading books.
+            </p>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-zh-hant hidden">
+                大家好，我是蕭佑丞，是一個香港人，正在理工大學作爲一位學生。我對建立尖端技術非常感興趣，尤其是一些與人工智能結合的科技。我熱衷於利用新興技術為世界帶來正面的改變。同時，我也喜歡數據分析與人工智慧整合的項目。除了編程之外，我還教授英語和STEM學科，玩電子遊戲，並且熱愛閱讀。
+            </p>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto lang-zh-hans hidden">
+                大家好，我是萧佑丞，是一个香港人，正在理工大学作为一位学生。我对建立尖端技术非常感兴趣，尤其是一些与人工智能结合的科技。我热衷于利用新兴技术为世界带来正面的改变。同时，我也喜欢数据分析与人工智慧整合的项目。除了编程之外，我还教授英语和STEM学科，玩电子游戏，并且热爱阅读。
+            </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">My Projects</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">我編程的項目</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">我编程的项目</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project1.png" alt="Project 1" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project1.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">Uni-GNN Recreation</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Uni-GNN：重新實現</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hans hidden">Uni-GNN：重新实现</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">A modification of the IJCAI 2021 research paper “UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” with a customised models and report consolidating our findings. Made using Python and Pytorch</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一個使用Python和Pytorch更改 IJCAI 2021 研究論文 “UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” 裏面的AI模型的項目以及學習報告。</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一个使用Python和Pytorch更改 IJCAI 2021 研究论文“UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” 里面的AI模型的项目以及学习报告</p>
+
+                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
+                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+                <!-- Project 2 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project2.png" alt="Project 2" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project2.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">CVFS Project</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">CVFS 項目</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hans hidden">CVFS 项目</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">This is a an in-memory Virtual File System (VFS), named the Comp VFS (CVFS), which is made in Java and utilizes OOP concepts to simulate a file system. The application uses the Model-View-Controller Pattern in Designing the CVFS. </p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">使用Java和OOP建立的虛擬檔案系統，系統使用模型-视图-控制器（MVC）模式建立結構</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">使用Java和OOP建立的虚拟档案系统，系统使用模型-视图-控制器（MVC）模式建立结构</p>
+
+                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
+                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+                <!-- Project 3 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project3.png" alt="Project 3" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project3.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">Cops and Robbers Game</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">警察抓強盜遊戲</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">警察抓强盗游戏</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">A game that uses a graph to make a Cops and Robbers Game. Written using python and can be run on the command prompt interface</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一款使用圖形資料結構製作的「警察與強盜」遊戲。使用 Python 編寫，在命令提示字元介面上運行。</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一款使用圖形資料結構製作的「警察與強盜」遊戲。使用 Python 編寫，在命令提示字元介面上運行。</p>
+
+                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
+                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+            </div>
+            <br>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 4 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project4.png" alt="Project 4" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project1.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">Python Minifier + Obsfucator</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Python Minifier + Obsfucator</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Python Minifier + Obsfucator</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">A project that uses the python minifier and obsfucator to mess up python code automatically inside a directory without breaking the code. Uses Python and Selenium.</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">采用Python和Selenium，使用Python minifier 和 obsfucator 將Python代碼混淆的的軟件</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">采用Python和Selenium，使用Python minifier 和 obsfucator 将Python代码混淆的的软件</p>
+
+                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
+                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+                <!-- Project 5 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project5.png" alt="Project 5" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project2.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">RAM VRAM tracker</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">記憶體顯存追蹤器</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">记忆体显存追踪器</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">A simple program written in python that tracks RAM VRAM usage. Saves data into csv for easy data analysis.</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一個用 Python 編寫的簡單程序，用於追蹤 RAM 和 VRAM 的使用情況。將資料儲存為 csv 文件，以便於資料分析。</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一个用 Python 编写的简单程序，用于跟踪 RAM 和 VRAM 的使用情况。将数据保存为 csv 文件，以便于数据分析。</p>
+
+                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline ">Link to View Project</a>
+                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+                <!-- Project 6 -->
+                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
+                    <!-- Project Image -->
+                    <img src="static/images/project6.png" alt="Project 6" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <!-- Place your project image in 'static/images/project3.jpg' -->
+                    <h3 class="text-xl font-semibold mb-2 lang-en">MNIST CLassifier</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">MNIST 分類器</h3>
+                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">MNIST 分类器</h3>
+
+                    <p class="text-gray-400 mb-4 lang-en">MNIST Classifier using object detection to recognize numbers. Uses python and pytorch.</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">MNIST 分類器使用物體偵測來識別數字。使用 Python 和 PyTorch</p>
+                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">MNIST 分类器使用物体检测来识别数字。使用 Python 和 PyTorch</p>
+
+                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
+                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
+                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Past Experience Section -->
+    <section id="experience" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Work Experience</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">工作經驗</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">工作经验</h2>
+
+            <div class="space-y-8">
+                <!-- Experience 1 -->
+                <div class="experience-card bg-gray-900 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Research AI Engineer Intern</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">研究人工智慧工程師實習生</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">研究人工智能工程师实习生</h3>
+                
+
+                    <p class="text-lg text-gray-300 lang-en">AI Lab Limited	 | Aug 2024, May - Jun 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">人工智能研究所	 | 8月 2024, 5月 - 6月 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">人工智能研究所	 | 8月 2024, 5月 - 6月 2025</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Development of LLM tools, such as research and deployment of RAG for sentiment analysis on stock analysis using LLM models, Python and Docker</p>
+                    <p class="text-gray-400 mt-2 lang-en">Development of Application using local deployment of T2T, T2I and T2V models, working on tasks such as developing and updating image and video generation workflows, reducing generation time by 50%, and testing RAM/VRAM usage and UI/UX</p>
+                    <p class="text-gray-400 mt-2 lang-en">Assisted in developing financial analysis tool using Python and Xlsxwriter to create Excel files with graphs to look at company data and deploying on Azure</p>
+                    <p class="text-gray-400 mt-2 lang-en">Research on recent GenAI models and applications on the market and recent research papers, including testing Agentic RAG embedding and reranking models, writing documentation and presentation of findings</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">LLM 工具的開發，例如使用 LLM 模型、Python 和 Docker 研究和部署用於股票情緒分析的 RAG</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">使用本地部署的 T2T、T2I 和 T2V 模型開發應用程序，開發和更新映像和視訊生成工作流程、將生成時間縮短 50% 以及測試 RAM/VRAM 使用情況和 UI/UX 等</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">協助使用 Python 和 Xlsxwriter 開發財務分析工具，建立帶有圖表的 Excel 檔案來查看公司資料並部署在 Azure 上</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">研究市場上最新的 GenAI 模型和應用以及最近的研究論文，包括測試 Agentic RAG 嵌入和重新排序模型、撰寫文件和展示研究結果</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">LLM 工具的开发，例如使用 LLM 模型、Python 和 Docker 研究和部署用于股票情绪分析的 RAG</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">使用本地部署的 T2T、T2I 和 T2V 模型开发应用程序，开发和更新映像和视讯生成工作流程、将生成时间缩短 50% 以及测试 RAM/VRAM 使用情况和 UI/UX 等</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">协助使用 Python 和 Xlsxwriter 开发财务分析工具，建立带有图表的 Excel 档案来查看公司资料并部署在 Azure 上</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">研究市场上最新的 GenAI 模型和应用以及最近的研究论文，包括测试 Agentic RAG 嵌入和重新排序模型、撰写文件和展示研究结果</p>
+                </div>
+
+                <!-- Experience 2 -->
+                <div class="experience-card bg-gray-900 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Part-Time STEM Tutor</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">兼職STEM導師</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">兼职STEM导师</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">Pigeon City Creative Computer Training Centre | Jan 2024 - Mar 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">博思創意	 | 1月 2024 - 3月 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">博思创意	 | 1月 2024 - 3月 2025</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Teaching over 40 primary/secondary school students in STEM through building and coding through robotics machines, and using object recognition through Computer Vision to create games</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">透過建造和編碼機器人，以及使用電腦視覺進行物件辨識來創建遊戲，向 40 多名中小學生講授 STEM 課程</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">透过建造和编码机器人，以及使用电脑视觉进行物件辨识来创建游戏，向 40 多名中小学生讲授 STEM 课程</p>
+
+
+                </div>
+                <!-- Experience 3 -->
+                <div class="experience-card bg-gray-900 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Secondary School STEM Team Leader</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中學 STEM 團隊領袖</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中學 STEM 團隊領袖</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | 2021-2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 2021-2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 2021-2023</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Worked with other team leaders to provide lessons in programming and game design to more than 80 primary students, including the coding, presentation and teaching using Scratch and Microsoft Makecode</p>
+                    <p class="text-gray-400 mt-2 lang-en">Participating in hosting events, such as school hackathons to provide 40+ students the opportunity to create ideas for new technologies. Assisted teams in developing presentations and coding for their ideas</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">與其他團隊領導合作，為 80 多名小學生提供程式設計和遊戲設計課程，包括使用 Scratch 和 Microsoft Makecode 進行程式設計、演示和教學</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">參與舉辦學校黑客馬拉松等活動，提供40多位學生創新科技創意的機會。協助團隊製作簡報並編寫程式碼</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">与其他团队领导合作，为 80 多名小学生提供程式设计和游戏设计课程，包括使用 Scratch 和 Microsoft Makecode 进行程式设计、演示和教学</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">参与举办学校黑客马拉松等活动，提供40多位学生创新科技创意的机会。协助团队制作简报并编写程式码</p>
+
+
+                </div>
+                <!-- Experience 4 -->
+                <div class="experience-card bg-gray-900 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Secondary School Cafe Manager</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中學咖啡廳經理</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中学咖啡厅经理</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | 2017-2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 2017-2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 2017-2023</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Led teams to work in the school cafe, interacting with customers and working collaboratively to make and sell products, in addition to cleaning and preparation to over 100 customers daily</p>
+                    <p class="text-gray-400 mt-2 lang-en">Contacted suppliers to buy products and set prices for products</p>
+                    <p class="text-gray-400 mt-2 lang-en">Helped develop over 20 employee's skills in different areas such as teamwork and regulations</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">帶領團隊在學校咖啡館工作，與顧客互動，合作製作和銷售產品，此外每天還要清潔和準備超過 100 名顧客</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">聯絡供應商購買產品並設定產品價格</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">幫助 20 多名員工培養團隊合作和法規等不同領域的技能</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">带领团队在学校咖啡馆工作，与顾客互动，合作制作和销售产品，此外每天还要清洁和准备超过 100 名顾客</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">联络供应商购买产品并设定产品价格</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">帮助 20 多名员工培养团队合作和法规等不同领域的技能</p>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- White line separator -->
+    <hr class="border-t-2 border-white opacity-20">
+
+    <!-- Education Section -->
+    <section id="education" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Education</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">學歷</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">学历</h2>
+            <div class="space-y-8">
+                <!-- Experience 1 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Bachelor of Science in Financial Technology and Artificial Intelligence</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">金融科技及人工智慧(榮譽)理學士</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">金融科技及人工智能(荣誉)理学士</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">The Hong Kong Polytechnic University | Sep 2023 - May 2027</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">香港理工大學 | 7月 2023 - 5月 2027</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">香港理工大學 | 7月 2023 - 5月 2027</p>
+                </div>
+                <!-- Experience 2 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">International Baccalaureate</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">國際文憑</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">国际文凭</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | Jul 2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 7月 2023</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 7月 2023</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Overall Score of 35/45</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">總分35/45</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">总分35/45</p>
+
+                </div>
+                <!-- Experience 3 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">IGCSE</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">IGCSE</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">IGCSE</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | Aug 2021</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 8月 2021</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 8月 2021</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">IGCSE Certificate of 5A* and 6As </p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">總分35/45</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">总分35/45</p>
+                </div>
+                <!-- Experience 4 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">IELTS</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">IGCSE 5A* 和 6A 證書</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">IGCSE 5A* 和 6A 证书</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">IDP | Aug 2022</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">IDP | 8月 2022</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">IDP | 8月 2022</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Overall Score of 8</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">總分8分</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">总分8分</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- White line separator -->
+    <hr class="border-t-2 border-white opacity-20">
+
+    <!-- Extracurricular Experience Section -->
+    <section id="Extracurricular Experience" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Extracurricular Experience</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">課外經驗</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">课外经验</h2>
+            <div class="space-y-8">
+                <!-- Experience 1 -->
+                <div class="experience-card bg-gray-900 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Teaching Assistant</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">助教</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">助教</h3>
+
+                    <p class="text-lg text-gray-300 lang-en">2025</p>
+                    <p class="text-gray-400 mt-2 lang-en">Assisted Prof Alan Chow in teaching Introduction to Artificial Intelligence and Entrepreneurship to over 100+ Students in multiple universities, such as PolyU and HKUST about NLP and Programming in PyTorch</p>
+                    <p class="text-gray-400 mt-2 lang-en">Demonstrated LLM and Data Visualisation Technology for Executive Course for Corporate Globalization for HKU SPACE, in lessons regarding Artificial Intelligence and Business Applications </p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">協助周建新教授為香港理工大學、香港科技大學等多所大學的 100 多名學生教授人工智慧和創業入門課程，內容涉及 NLP 和 PyTorch 編程</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">在香港大學專業進修學院企業全球化高階主管課程中展示法學碩士和資料視覺化技術，涉及人工智慧和商業應用課程</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">协助周建新教授为香港理工大学、香港科技大学等多所大学的 100 多名学生教授人工智慧和创业入门课程，内容涉及 NLP 和 PyTorch 编程</p>
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">在香港大学专业进修学院企业全球化高阶主管课程中展示法学硕士和资料视觉化技术，涉及人工智慧和商业应用课程</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Skills</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">技能</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">技能</h2>
+            <!-- White line separator -->
+            <hr class="border-t-2 border-white opacity-20">
+            <br>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Programming Languages and Libraries</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">编程語言和函式庫</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">编程语言和库</h3>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Python</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Pytorch</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Tensorflow</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Flask</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Django</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">SQL</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">HTML</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">CSS</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Javascript</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Java</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">R</span>
+            </div>
+            <br>
+            <!-- White line separator -->
+            <hr class="border-t-2 border-white opacity-20">
+            <br>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Developer Tools</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">開發人員工具</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">开发人员工具</h3>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Git</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">VScode</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Azure</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">ComfyUI</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Forge</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Ollama</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">LMStudio</span>
+            </div>
+            <br>
+            <!-- White line separator -->
+            <hr class="border-t-2 border-white opacity-20">
+            <br>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Languages</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">語言</h3>
+            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">语言</h3>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">Cantonese (Native)</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">Chinese (Native)</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">English (Native)</span>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Contact Me!</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">聯絡方式</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">联络方式</h2>
+            <div class="flex justify-center space-x-8">
+            <a href="mailto:shilohsiu0@gmail.com" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">Email</a>
+            <a href="https://github.com/J71956" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">GitHub</a>
+            <a href="https://www.linkedin.com/in/yau-shing-siu-368383225/" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">Linkedin</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>© 2025 Siu Yau Shing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Custom cursor
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.pageX + 'px';
+            cursor.style.top = e.pageY + 'px';
+        });
+
+        // Particles.js configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#3b82f6' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#3b82f6', opacity: 0.4, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                modes: { grab: { distance: 200, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        });
+    </script>
+    <!-- Language Switching Script -->
+    <script>
+        document.getElementById('language-switcher')?.addEventListener('change', function () {
+            const lang = this.value;
+
+            // Hide all language-specific elements
+            document.querySelectorAll('[class*="lang-"]').forEach(el => el.classList.add('hidden'));
+
+           // Show only the selected language  
+           document.querySelectorAll(`.lang-${lang}`).forEach(el => el.classList.remove('hidden'));
+       });
+</script>
+
+</body>
+</html>
