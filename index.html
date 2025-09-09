@@ -51,6 +51,9 @@
         html {
             scroll-behavior: smooth;
         }
+        section[id] {
+            scroll-margin-top: 5rem; /* This should match your nav bar's height */
+        }
         /* Futuristic glow effect */
         .glow {
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
@@ -125,8 +128,19 @@
         .carousel-nav:hover {
             background: rgba(59, 130, 246, 1);
         }
-        
-        
+        /* Active navigation link indicator */
+        nav a.active {
+            border-bottom: 3px solid #a855f7; /* Tailwind's purple-500 */
+            padding-bottom: 0.5rem; /* Optional: adds a little space under the text */
+        }
+        [class*="lang-"] {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .hidden {
+            display: none !important;
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-900 font-sans text-gray-100">
@@ -151,6 +165,12 @@
                     <a href="#about" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">關於我</a>
                     <a href="#about" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">关于我</a>
                 </li>
+                <!-- Experience -->
+                <li class="relative">
+                    <a href="#experience" class="lang-en block hover:text-purple-400 transition-colors">Experience</a>
+                    <a href="#experience" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">經驗</a>
+                    <a href="#experience" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">经验</a>
+                </li>
 
                 <!-- Projects -->
                 <li class="relative">
@@ -158,12 +178,7 @@
                     <a href="#projects" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">我的項目</a>
                     <a href="#projects" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">我的項目</a>
                 </li>
-                <li class="relative">
-                    <a href="#experience" class="lang-en block hover:text-purple-400 transition-colors">Experience</a>
-                    <a href="#experience" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">經驗</a>
-                    <a href="#experience" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">经验</a>
-                </li>
-
+                
                 <!-- Skills -->
                 <li class="relative">
                     <a href="#skills" class="lang-en block hover:text-purple-400 transition-colors">Skills</a>
@@ -651,8 +666,8 @@
             <hr class="border-t-2 border-white opacity-20">
             <br>
             <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Programming Languages and Libraries</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">编程語言和函式庫</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">编程语言和库</h3>
+            <h3 class="text-2xlfont-semibold text-purple-400 lang-zh-hans hidden">编程語言和函式庫</h3>
+            <h3 class="text-2xl font-semibold text-purple-400 lang-zh-hant hidden">编程语言和库</h3>
 
             <div class="flex flex-wrap justify-center gap-4">
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Python</span>
@@ -773,16 +788,50 @@
     </script>
     <!-- Language Switching Script -->
     <script>
-        document.getElementById('language-switcher')?.addEventListener('change', function () {
-            const lang = this.value;
+    document.getElementById('language-switcher')?.addEventListener('change', function () {
+        const lang = this.value;
 
-            // Hide all language-specific elements
-            document.querySelectorAll('[class*="lang-"]').forEach(el => el.classList.add('hidden'));
+        // Fade out currently visible elements
+        document.querySelectorAll('[class*="lang-"]:not(.hidden)').forEach(el => {
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.classList.add('hidden');
+            }, 300); // Wait for fade-out to finish
+        });
 
-           // Show only the selected language  
-           document.querySelectorAll(`.lang-${lang}`).forEach(el => el.classList.remove('hidden'));
-       });
+        // After a short delay, fade in the new language
+        setTimeout(() => {
+            document.querySelectorAll(`.lang-${lang}`).forEach(el => {
+                el.classList.remove('hidden');
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                }, 50); // Small delay to ensure 'hidden' class is removed first
+            });
+        }, 300);
+    });
 </script>
+<script>
+    window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a');
 
+    let current = '';
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - 200)) { // Adjust 200 to control when it activates
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
 </body>
 </html>
