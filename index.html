@@ -69,10 +69,6 @@
             text-shadow: 0 0 5px rgba(59, 130, 246, 0.6);
             font-family: 'Orbitron', sans-serif;
         }
-        /* Custom cursor */
-        body {
-            cursor: none;
-        }
         .custom-cursor {
             position: fixed;
             width: 20px;
@@ -144,8 +140,6 @@
     </style>
 </head>
 <body class="bg-gray-900 font-sans text-gray-100">
-    <!-- Custom Cursor -->
-    <div class="custom-cursor" id="custom-cursor"></div>
     <!-- Navigation -->
     <nav class="bg-gray-800 bg-opacity-90 text-white fixed w-full top-0 z-50 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -751,12 +745,7 @@
             });
         });
 
-        // Custom cursor
-        const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.pageX + 'px';
-            cursor.style.top = e.pageY + 'px';
-        });
+        
 
         // Particles.js configuration
         particlesJS('particles-js', {
