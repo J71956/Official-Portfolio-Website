@@ -62,7 +62,7 @@
         .project-card:hover, .experience-card:hover {
             transform: translateY(-10px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 20px rgba(147, 51, 234, 0.7);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
         }
         /* Reduced neon text glow */
         .neon-text {
@@ -173,13 +173,29 @@
                     <a href="#projects" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">我的項目</a>
                 </li>
                 
+                
+
+                <!-- Education -->
+                <li class="relative">
+                    <a href="#education" class="lang-en block hover:text-purple-400 transition-colors">Education</a>
+                    <a href="#education" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">學歷</a>
+                    <a href="#education" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">学历</a>
+                </li>
+
+                <!-- Awards -->
+                <li class="relative">
+                    <a href="#awards" class="lang-en block hover:text-purple-400 transition-colors">Awards</a>
+                    <a href="#awards" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">獎項</a>
+                    <a href="#awards" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">奖项</a>
+                </li>
+
                 <!-- Skills -->
                 <li class="relative">
                     <a href="#skills" class="lang-en block hover:text-purple-400 transition-colors">Skills</a>
                     <a href="#skills" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">技能</a>
                     <a href="#skills" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">技能</a>
                 </li>
-
+                
                 <!-- Contact -->
                 <li class="relative">
                     <a href="#contact" class="lang-en block hover:text-purple-400 transition-colors">Contact</a>
@@ -257,6 +273,24 @@
 
             <div class="space-y-8">
                 <!-- Experience 1 -->
+                 <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">AI Technical Intern</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">人工智慧技術實習生</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">人工智慧技术实习生</h3>
+                
+
+                    <p class="text-lg text-gray-300 lang-en">Feelingss Group Limited	 | Sep - Dec 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">Feelingss Group Limited	 | 9月 - 12月 2025</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">Feelingss Group Limited	 | 9月 - 12月 2025</p>
+
+                    <p class="text-gray-400 mt-2 lang-en">Designed and implemented a bug reporting system within an AI application, integrating real-time database logging and integrated different GenAI models into the system with the Technical Team</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">設計並實現了人工智慧應用程式中結合即時資料庫日誌記錄的的錯誤報告系統，並與技術團隊將不同的 GenAI 模型整合到系統</p>
+
+                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">设计并实现了人工智慧应用程式中结合即时资料库日志记录的的错误报告系统，并与技术团队将不同的 GenAI 模型整合到系统</p>
+                </div>
+
+
                 <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
                     <h3 class="text-xl font-semibold text-purple-400 lang-en">Research AI Engineer Intern</h3>
                     <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">研究人工智慧工程師實習生</h3>
@@ -563,9 +597,9 @@
                     <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">金融科技及人工智慧(榮譽)理學士</h3>
                     <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">金融科技及人工智能(荣誉)理学士</h3>
 
-                    <p class="text-lg text-gray-300 lang-en">The Hong Kong Polytechnic University | Sep 2023 - May 2027</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">香港理工大學 | 7月 2023 - 5月 2027</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">香港理工大學 | 7月 2023 - 5月 2027</p>
+                    <p class="text-lg text-gray-300 lang-en">The Hong Kong Polytechnic University | Sep 2023 - Jul 2027</p>
+                    <p class="text-lg text-gray-300 lang-zh-hant hidden">香港理工大學 | 7月 2023 - 7月 2027</p>
+                    <p class="text-lg text-gray-300 lang-zh-hans hidden">香港理工大學 | 7月 2023 - 7月 2027</p>
                 </div>
                 <!-- Experience 2 -->
                 <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
@@ -611,6 +645,38 @@
 
     <!-- White line separator -->
     <hr class="border-t-2 border-white opacity-20">
+
+    <!-- Awards and Certificates Section -->
+    <section id="awards" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Awards and Certificates</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">獎項及證書</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">奖项及证书</h2>
+            <div class="space-y-8">
+                <!-- Award 1 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">NVIDIA Deep Learning Institute Certificate for Fundamentals of Deep Learning</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">NVIDIA 深度學習研究所基礎深度學習證書</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">NVIDIA 深度学习研究所基础深度学习证书</h3>
+                </div>
+                
+                <!-- Award 2 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">China Mainland, HK & Macao Digital Economy Innovation & Entrepreneurship Competition 2025 Silver Award</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中國內地、香港及澳門數字經濟創新創業大賽 2025 銀獎</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中国内地、香港及澳门数字经济创新创业大赛 2025 银奖</h3>
+                </div>
+
+                <!-- Award 3 -->
+                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold text-purple-400 lang-en">International Competition on AI in Education 2025 Merit Award (Stream 1, Higher Education)</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">2025 年國際人工智能教育競賽優異獎（第一組，高等教育）</h3>
+                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">2025 年国际人工智能教育竞赛优异奖（第一组，高等教育）</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Carousel Section -->
     <section id="gallery" class="py-20 bg-gray-800">
         <div class="max-w-7xl mx-auto px-4">
@@ -660,19 +726,19 @@
             <hr class="border-t-2 border-white opacity-20">
             <br>
             <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Programming Languages and Libraries</h3>
-            <h3 class="text-2xlfont-semibold text-purple-400 lang-zh-hans hidden">编程語言和函式庫</h3>
-            <h3 class="text-2xl font-semibold text-purple-400 lang-zh-hant hidden">编程语言和库</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">编程語言和函式庫</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">编程语言和库</h3>
 
             <div class="flex flex-wrap justify-center gap-4">
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Python</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Pytorch</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Tensorflow</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Flask</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Django</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">SQL</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">HTML</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">CSS</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Javascript</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Typescript</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Java</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">R</span>
             </div>
@@ -680,9 +746,9 @@
             <!-- White line separator -->
             <hr class="border-t-2 border-white opacity-20">
             <br>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Developer Tools</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">開發人員工具</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">开发人员工具</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Tools</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">工具</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">开发人员工具</h3>
 
             <div class="flex flex-wrap justify-center gap-4">
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Git</span>
@@ -692,19 +758,26 @@
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Forge</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Ollama</span>
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">LMStudio</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Docker</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Microsoft 365</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">MCP</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Notion</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">SQLite</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Canva</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">PowerBI</span>
             </div>
             <br>
             <!-- White line separator -->
             <hr class="border-t-2 border-white opacity-20">
             <br>
             <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Languages</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">語言</h3>
-            <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">语言</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">語言</h3>
+            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">语言</h3>
 
             <div class="flex flex-wrap justify-center gap-4">
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">Cantonese (Native)</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">Mandarin (Native)</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow lang-en">English (Native)</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">Cantonese (Native)</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">Mandarin (Native)</span>
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">English (Native)</span>
             </div>
             
         </div>
