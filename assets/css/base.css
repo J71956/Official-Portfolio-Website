@@ -1,0 +1,309 @@
+/* ---------------------------------------------------------------------------
+   base.css — reset, typography, layout primitives, utilities.
+   Everything here is generic; section-specific styling lives in sections.css.
+--------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------- reset */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Native smooth scroll is a fallback only; Lenis owns this on desktop. */
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--c-void);
+  color: var(--c-ink-2);
+  font-family: var(--f-body);
+  font-size: var(--t-md);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, picture, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img { height: auto; }
+
+input, button, textarea, select { font: inherit; color: inherit; }
+
+p, h1, h2, h3, h4, li { overflow-wrap: break-word; }
+
+ul, ol { list-style: none; padding: 0; }
+
+a { color: inherit; text-decoration: none; }
+
+[hidden] { display: none !important; }
+
+/* --------------------------------------------------------------- typography */
+
+h1, h2, h3, h4 {
+  font-family: var(--f-display);
+  color: var(--c-ink);
+  font-weight: 500;
+  line-height: var(--lh-head);
+  letter-spacing: var(--ls-head);
+  text-wrap: balance;
+}
+
+.t-hero {
+  font-size: var(--t-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-mega);
+  font-weight: 400;
+  font-variation-settings: "opsz" 120, "wght" 400;
+}
+
+.t-section {
+  font-size: var(--t-3xl);
+  line-height: var(--lh-tight);
+  font-variation-settings: "opsz" 72, "wght" 400;
+}
+
+.t-card { font-size: var(--t-xl); font-variation-settings: "opsz" 24, "wght" 500; }
+
+.eyebrow {
+  font-family: var(--f-body);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-acc);
+}
+
+:lang(zh-Hant) .eyebrow,
+:lang(zh-Hans) .eyebrow { text-transform: none; letter-spacing: .08em; }
+
+.lede {
+  font-size: var(--t-lg);
+  color: var(--c-ink-2);
+  max-width: var(--measure);
+}
+
+.meta {
+  font-family: var(--f-body);
+  font-size: var(--t-sm);
+  color: var(--c-ink-3);
+  letter-spacing: .01em;
+}
+
+/* Ghost numerals and wordmarks — L2, behind everything readable. */
+.ghost {
+  position: absolute;
+  font-family: var(--f-display);
+  font-size: var(--t-mega);
+  line-height: 1;
+  letter-spacing: var(--ls-mega);
+  color: var(--c-ink-4);
+  opacity: .08;
+  pointer-events: none;
+  user-select: none;
+  z-index: var(--z-ghost);
+}
+
+/* ----------------------------------------------------------- layout helpers */
+
+.container {
+  width: 100%;
+  max-width: var(--w-content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Self-sufficient rather than a modifier on .container: the nav uses it alone,
+   and without its own padding the brand sat flush against the viewport edge. */
+.container-wide {
+  width: 100%;
+  max-width: var(--w-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Deliberately no `content-visibility: auto` here. It collapses off-screen
+   sections to their intrinsic-size placeholder, which is exactly the height
+   ScrollTrigger reads during refresh — the pinned sections then computed
+   start positions hundreds of pixels off. Ten sections do not need it. */
+.section {
+  position: relative;
+  padding-block: var(--pad-section);
+  scroll-margin-top: calc(var(--nav-h) + var(--s-4));
+}
+
+.stack > * + * { margin-block-start: var(--flow, var(--s-4)); }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  margin-block-end: var(--s-8);
+}
+
+.section-head .numeral {
+  font-family: var(--f-body);
+  font-size: var(--t-xs);
+  letter-spacing: var(--ls-eyebrow);
+  color: var(--c-acc-dim);
+  flex: none;
+}
+
+/* A brass hairline that motion.js wipes in with scaleX. */
+.rule {
+  height: 1px;
+  background: var(--c-acc-dim);
+  transform-origin: left center;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------- media */
+
+/* Reserving the box in CSS makes CLS structurally zero rather than
+   incidentally zero: the space exists before a single byte arrives. */
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-raise-1);
+  border-radius: var(--r-md);
+}
+
+.media img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --------------------------------------------------------------- utilities */
+
+.u-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.u-measure { max-width: var(--measure); }
+.u-center { margin-inline: auto; }
+.u-nowrap { white-space: nowrap; }
+
+/* --------------------------------------------------------------- focus ring */
+
+:focus { outline: none; }
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--c-void), 0 0 0 4px var(--c-acc-hi);
+  border-radius: var(--r-sm);
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--s-3);
+  left: var(--s-3);
+  z-index: 999;
+  padding: var(--s-3) var(--s-5);
+  background: var(--c-raise-2);
+  color: var(--c-ink);
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-3);
+  transform: translateY(-200%);
+  transition: transform var(--d-base) var(--e-out);
+}
+
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* ----------------------------------------------------------------- buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-5);
+  min-height: 44px;
+  font-family: var(--f-body);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--c-ink);
+  background: transparent;
+  border: 1px solid var(--c-line-str);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: border-color var(--d-base) var(--e-out),
+              color var(--d-base) var(--e-out),
+              background-color var(--d-base) var(--e-out);
+}
+
+.btn .arrow { transition: transform var(--d-base) var(--e-out); }
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { border-color: var(--c-acc); color: var(--c-acc-hi); }
+  .btn:hover .arrow { transform: translateX(3px); }
+}
+
+/* Underline that grows from the left on enter and retreats to the right on
+   leave, so the motion reads as directional rather than as a toggle. */
+.link-underline { position: relative; display: inline-block; }
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: var(--c-acc);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--d-base) var(--e-out);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ------------------------------------------------------- reveal base states */
+
+/* motion.js animates these to their resting state. If JS never runs, or the
+   visitor prefers reduced motion, the .motion-off rule below restores them —
+   a section is never left blank. */
+[data-reveal] { will-change: transform, opacity; }
+
+/* A short travel distance keeps the entrance quick and legible; a long one
+   reads as a wait. */
+.motion-on [data-reveal] { opacity: 0; transform: translateY(1.25rem); }
+.motion-on [data-reveal="wipe"] { opacity: 1; transform: none; clip-path: inset(0 100% 0 0); }
+.motion-on [data-reveal="chip"] { opacity: 0; transform: scale(.88); }
+
+html:not(.motion-on) [data-reveal],
+.motion-off [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  will-change: auto;
+}
+
+/* -------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------ touch input */
+
+@media (pointer: coarse) {
+  /* Comfortable hit targets; hover affordances are meaningless here. */
+  .btn, .nav-link, .contact-link { min-height: 44px; }
+}

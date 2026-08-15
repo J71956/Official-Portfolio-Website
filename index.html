@@ -1,947 +1,412 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siu Yau Shing (蕭佑丞) - Coding Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-        section[id] {
-            scroll-margin-top: 5rem; /* This should match your nav bar's height */
-        }
-        /* Futuristic glow effect */
-        .glow {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-        }
-        /* Hover effect for project cards */
-        .project-card:hover, .experience-card:hover {
-            transform: translateY(-10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-        }
-        /* Reduced neon text glow */
-        .neon-text {
-            text-shadow: 0 0 5px rgba(59, 130, 246, 0.6);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .custom-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.8), transparent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-        }
-        /* Particle background container */
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        /* Carousel styles */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-        }
-        .carousel {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-item {
-            min-width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .carousel-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(59, 130, 246, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            user-select: none;
-        }
-        .carousel-nav-prev {
-            left: 10px;
-        }
-        .carousel-nav-next {
-            right: 10px;
-        }
-        .carousel-nav:hover {
-            background: rgba(59, 130, 246, 1);
-        }
-        /* Active navigation link indicator */
-        nav a.active {
-            border-bottom: 3px solid #a855f7; /* Tailwind's purple-500 */
-            padding-bottom: 0.5rem; /* Optional: adds a little space under the text */
-        }
-        [class*="lang-"] {
-            transition: opacity 0.3s ease-in-out;
-        }
+<title>Siu Yau Shing — AI and Financial Technology</title>
+<meta name="description" content="Year 4 BSc (Hons) Financial Technology and Artificial Intelligence at PolyU. Building systems where people and AI think together.">
+<meta name="author" content="Siu Yau Shing">
+<link rel="canonical" href="https://j71956.github.io/Official-Portfolio-Website/">
 
-        .hidden {
-            display: none !important;
-            opacity: 0;
-        }
-    </style>
+<!-- GitHub Pages cannot set response headers, so the policy that
+     staticwebapp.config.json applies on Azure is declared here instead.
+     frame-ancestors is header-only and has no meta equivalent. -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'">
+
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Siu Yau Shing — AI and Financial Technology">
+<meta property="og:description" content="Building systems where people and AI think together.">
+<meta property="og:image" content="https://j71956.github.io/Official-Portfolio-Website/assets/img/portrait-760.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="alternate" hreflang="en" href="?lang=en">
+<link rel="alternate" hreflang="zh-Hant" href="?lang=zh-Hant">
+<link rel="alternate" hreflang="zh-Hans" href="?lang=zh-Hans">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="image" type="image/avif"
+      imagesrcset="assets/img/portrait-380.avif 380w, assets/img/portrait-760.avif 760w"
+      imagesizes="(max-width: 900px) 60vw, 380px">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/css/tokens.css?v=1786814452">
+<link rel="stylesheet" href="assets/css/base.css?v=1786814452">
+<link rel="stylesheet" href="assets/css/sections.css?v=1786814452">
+
+<script>
+/* Resolve the locale before first paint so the page never flashes the wrong
+   language, and so <html lang> is correct for assistive technology. */
+(function () {
+  var S = ['en', 'zh-Hant', 'zh-Hans'];
+  var q = null, st = null;
+  try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+  try { st = localStorage.getItem('site.locale'); } catch (e) {}
+  var nav = navigator.language || 'en';
+  var guess = /^zh\b/i.test(nav) ? (/hans|cn|sg/i.test(nav) ? 'zh-Hans' : 'zh-Hant') : 'en';
+  var loc = S.indexOf(q) > -1 ? q : (S.indexOf(st) > -1 ? st : guess);
+  document.documentElement.lang = loc;
+  document.documentElement.dataset.locale = loc;
+  window.__LOCALE__ = loc;
+  /* Only arm the from-hidden reveal states if motion will actually run.
+     Without this, a JS failure would leave every section invisible. */
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('motion-on');
+  }
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Siu Yau Shing",
+  "alternateName": ["蕭佑丞", "Shiloh Siu"],
+  "jobTitle": "Student, Financial Technology and Artificial Intelligence",
+  "alumniOf": "The Hong Kong Polytechnic University",
+  "address": { "@type": "PostalAddress", "addressLocality": "Hong Kong" },
+  "sameAs": [
+    "https://github.com/J71956",
+    "https://www.linkedin.com/in/yau-shing-siu-368383225/"
+  ]
+}
+</script>
 </head>
-<body class="bg-gray-900 font-sans text-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-gray-800 bg-opacity-90 text-white fixed w-full top-0 z-50 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold neon-text">Siu Yau Shing (蕭佑丞), Shiloh</h1>
-            <ul class="flex items-center space-x-6 relative">
-            
-                <!-- Home -->
-                <li class="relative">
-                    <a href="#home" class="lang-en block hover:text-purple-400 transition-colors">Home</a>
-                    <a href="#home" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">首頁</a>
-                    <a href="#home" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">首页</a>
-                </li>
 
-                <!-- About -->
-                <li class="relative">
-                    <a href="#about" class="lang-en block hover:text-purple-400 transition-colors">About</a>
-                    <a href="#about" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">關於我</a>
-                    <a href="#about" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">关于我</a>
-                </li>
-                <!-- Experience -->
-                <li class="relative">
-                    <a href="#experience" class="lang-en block hover:text-purple-400 transition-colors">Experience</a>
-                    <a href="#experience" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">經驗</a>
-                    <a href="#experience" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">经验</a>
-                </li>
+<body>
 
-                <!-- Projects -->
-                <li class="relative">
-                    <a href="#projects" class="lang-en block hover:text-purple-400 transition-colors">Projects</a>
-                    <a href="#projects" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">我的項目</a>
-                    <a href="#projects" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">我的項目</a>
-                </li>
-                
-                
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
 
-                <!-- Education -->
-                <li class="relative">
-                    <a href="#education" class="lang-en block hover:text-purple-400 transition-colors">Education</a>
-                    <a href="#education" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">學歷</a>
-                    <a href="#education" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">学历</a>
-                </li>
+<!-- ===================================================== chrome (depth 5) -->
+<div class="progress-rail" aria-hidden="true"><span class="progress-bar"></span></div>
 
-                <!-- Awards -->
-                <li class="relative">
-                    <a href="#awards" class="lang-en block hover:text-purple-400 transition-colors">Awards</a>
-                    <a href="#awards" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">獎項</a>
-                    <a href="#awards" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">奖项</a>
-                </li>
+<header class="nav" id="nav">
+  <div class="nav-inner container-wide">
+    <a class="nav-brand" href="#home">
+      <span class="nav-brand-name" data-i18n="brand.name">Siu Yau Shing</span>
+      <span class="nav-brand-alt" data-i18n="brand.alt">蕭佑丞 · Shiloh</span>
+    </a>
 
-                <!-- Skills -->
-                <li class="relative">
-                    <a href="#skills" class="lang-en block hover:text-purple-400 transition-colors">Skills</a>
-                    <a href="#skills" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">技能</a>
-                    <a href="#skills" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">技能</a>
-                </li>
+    <nav class="nav-links" id="nav-links" aria-label="Sections">
+      <ul>
+        <li><a class="nav-link" href="#about"      data-i18n="nav.about">About</a></li>
+        <li><a class="nav-link" href="#experience" data-i18n="nav.experience">Experience</a></li>
+        <li><a class="nav-link" href="#projects"   data-i18n="nav.projects">Projects</a></li>
+        <li><a class="nav-link" href="#education"  data-i18n="nav.education">Education</a></li>
+        <li><a class="nav-link" href="#exchange"   data-i18n="nav.exchange">Exchange</a></li>
+        <li><a class="nav-link" href="#awards"     data-i18n="nav.awards">Awards</a></li>
+        <li><a class="nav-link" href="#gallery"    data-i18n="nav.gallery">Gallery</a></li>
+        <li><a class="nav-link" href="#skills"     data-i18n="nav.skills">Skills</a></li>
+        <li><a class="nav-link" href="#contact"    data-i18n="nav.contact">Contact</a></li>
+      </ul>
 
-                <!-- Contact -->
-                <li class="relative">
-                    <a href="#contact" class="lang-en block hover:text-purple-400 transition-colors">Contact</a>
-                    <a href="#contact" class="lang-zh-hant hidden hover:text-purple-400 transition-colors">聯絡我</a>
-                    <a href="#contact" class="lang-zh-hans hidden hover:text-purple-400 transition-colors">联络我</a>
-                </li>
-
-                <!-- Language Switcher -->
-                <li class="ml-6 flex items-center">
-                    <select id="language-switcher" class="bg-gray-700 text-white rounded px-2 py-1 text-sm">
-                        <option value="en" selected>English</option>
-                        <option value="zh-hant">繁體中文</option>
-                        <option value="zh-hans">简体中文</option>
-                    </select>
-                </li>
-            </ul>
-        </div>
+      <div class="locale" role="group" aria-label="Language" data-i18n-attr="aria-label:a11y.langLabel">
+        <button type="button" class="locale-btn" data-locale-btn="en"      aria-pressed="true">EN</button>
+        <button type="button" class="locale-btn" data-locale-btn="zh-Hant" aria-pressed="false">繁</button>
+        <button type="button" class="locale-btn" data-locale-btn="zh-Hans" aria-pressed="false">简</button>
+      </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 relative">
-        <div id="particles-js"></div>
-        <div class="text-center max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center relative z-10">
-            <!-- Profile Image -->
-            <div class="mb-6 md:mb-0 md:mr-8">
-            <div class="mt-16"> <!-- This matches your nav height (py-4 = 1rem = 16px) -->
-            <img src="static/images/1429s_cv.jpg" alt="Profile Picture" class="w-48 h-48 rounded-full border-4 border-blue-500 glow -mt-12 relative z-20">
-</div>
-                <!-- Place your profile image in 'static/images/profile.jpg' -->
-            </div>
-            <div>
-                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-en">Welcome to My Portfolio!</h1>
-                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-zh-hant hidden">歡迎來到我的網站！</h1>
-                <h1 class="text-5xl md:text-6xl font-bold mb-4 neon-text lang-zh-hans hidden">欢迎来到我的网站！</h1>
-
-                <p class="text-xl mb-6 lang-en">I'm a passionate student programming interesting projects in the Hong Kong Polytechnic University.</p>
-                <p class="text-xl mb-6 lang-zh-hant hidden">我是一名對科技與創新充滿熱情的軟體工程師，現在處於香港理工大學學習金融科技與人工智慧理學學士（榮譽）的學位</p>
-                <p class="text-xl mb-6 lang-zh-hans hidden">我是一名对科技与创新充满热情的软体工程师，现在处于香港理工大学学习金融科技与人工智慧理学学士（荣誉）的学位</p>
-
-                <a href="https://github.com/J71956" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-en">Click to View My Work in GitHub!</a>
-                <a href="https://github.com/J71956" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-zh-hant hidden">點擊去看看我Github的作品吧！</a>
-                <a href="https://github.com/J71956" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 glow lang-zh-hans hidden">点击去看看我Github的作品吧！</a>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-en">About Me</h2>
-            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hant hidden">關於我</h2>
-            <h2 class="text-4xl font-bold text-center mb-8 neon-text lang-zh-hans hidden">关于我</h2>
-            <p class="text-xl md:text-2xl text-gray-300 leading-relaxed text-center max-w-3xl mx-auto lang-en">
-                I’m Siu Yau Shing (Shiloh) a Year 3 BSc (Hons) student in Financial Technology and Artificial Intelligence at The Hong Kong Polytechnic University, with an upcoming exchange semester at the University of Waterloo (Jan–Apr 2026).
-            </p>  
-            <p class="text-xl md:text-2xl text-gray-300 leading-relaxed text-center max-w-3xl mx-auto lang-zh-hant hidden">
-                我是蕭佑丞（Shiloh），現為香港理工大學金融科技與人工智慧榮譽理學士三年級學生，並即將於2026年1月至4月赴滑鐵盧大學進行交換學期。
-            </p>  
-            <p class="text-xl md:text-2xl text-gray-300 leading-relaxed text-center max-w-3xl mx-auto lang-zh-hans hidden">
-                我是萧佑丞（Shiloh），现为香港理工大学金融科技与人工智能荣誉理学士三年级学生，并将于2026年1月至4月赴滑铁卢大学进行交换学期。
-            </p>  
-            </br>
-            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-en">
-                My passion lies at the intersection of artificial intelligence, human-centered design, and education. I believe the future isn’t about AI replacing humans, but about AI empowering people through intuitive, collaborative systems. This drives me to build applications where humans and AI co-create, co-learn, and co-evolve in a interconnected manner.
-            </p>
-          <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hant hidden">
-                我的熱情在於人工智慧、以人為本的設計與教育三者的交匯之處。我相信未來並非人工智慧取代人類，而是透過直觀且協作的系統，讓人工智慧賦能人類。這驅使我開發人類與人工智慧共同創造、共同學習、共同演化的應用。
-            </p> 
-        <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hans hidden">
-                我的热情在于人工智能、以人为本的设计与教育三者的交汇之处。我相信未来并非人工智能取代人类，而是通过直观且协作的系统，让人工智能赋能人类。这驱使我开发人类与人工智能共同创造、共同学习、共同演化的应用。
-            </p> 
-        </br>
-                <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-en">
-
-                Beyond building, I’m deeply committed to demystifying AI and Technology. As a STEM tutor and teaching assistant, I’ve taught more than 100+from primary schoolers to university learners concepts in computer vision, AIoT, NLP, and PyTorch, often using hands-on robotics and real-world analogies, in multiple different levels. I’ve also delivered executive workshops on AI for business at HKU SPACE, bridging technical innovation with strategic application.
-                </p>
-                  <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hant hidden">
-
-                除了開發技術，我也致力於揭開人工智慧與科技的神秘面紗。作為STEM導師及助教，我已向超過100名從小學生到大學生的學習者教授電腦視覺、人工智慧物聯網（AIoT）、自然語言處理（NLP）和PyTorch等概念，經常結合動手操作的機器人項目與貼近生活的類比，因應不同學習階段調整教學方式。此外，我也曾在香港大學專業進修學院（HKU SPACE）主講企業高階人工智慧工作坊，連結技術創新與商業策略應用。
-                </p>
-                 <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hans hidden">
-
-                除了技术开发，我也致力于揭开人工智能与科技的神秘面纱。作为STEM导师及助教，我已向超过100名从小学生到大学生的学习者教授计算机视觉、人工智能物联网（AIoT）、自然语言处理（NLP）和PyTorch等概念，经常结合动手操作的机器人项目与贴近生活的类比，并根据不同学习阶段调整教学方式。此外，我也曾于香港大学专业进修学院（HKU             
-               </p>
-            </br>
-                    <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-en">
-
-                Currently exploring:
-                </br>  </br>
-                On-device AI and privacy-preserving LLMs,  </br>
-                Applications for inclusive human-AI interaction,  </br>
-                AI/Technological literacy as a foundational modern skill.
-            </p>
-            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hant hidden">
-
-                目前我正探索以下方向：
-                </br>  </br>
-                端側人工智慧與隱私保護型大型語言模型（LLM） </br>
-                包容性人機協作互動的應用 </br>
-                人工智慧與科技素養作為現代社會的基礎能力       
-            </p>
-            <p class="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto text-center lang-zh-hans hidden">
-
-                目前我正探索以下方向：
-                </br>  </br>
-                端侧人工智能与隐私保护型大语言模型（LLM）</br>
-                包容性人机协作互动的应用</br>
-                人工智能与科技素养作为现代社会的基础能力  
-            </p>
-        </div>
-    </section>
-
-    <!-- White line separator -->
-            <hr class="border-t-2 border-white opacity-20">
-
-    <!-- Past Experience Section -->
-    <section id="experience" class="py-20 bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Work Experience</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">工作經驗</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">工作经验</h2>
-
-            <div class="space-y-8">
-                <!-- Experience 1 -->
-                 <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">AI Technical Intern</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">人工智慧技術實習生</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">人工智慧技术实习生</h3>
-                
-
-                    <p class="text-lg text-gray-300 lang-en">Feelingss Group Limited	 | Sep - Dec 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">Feelingss Group Limited	 | 9月 - 12月 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">Feelingss Group Limited	 | 9月 - 12月 2025</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Designed and implemented a bug reporting system within an AI application, integrating real-time database logging and integrated different GenAI models into the system with the Technical Team</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">設計並實現了人工智慧應用程式中結合即時資料庫日誌記錄的的錯誤報告系統，並與技術團隊將不同的 GenAI 模型整合到系統</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">设计并实现了人工智慧应用程式中结合即时资料库日志记录的的错误报告系统，并与技术团队将不同的 GenAI 模型整合到系统</p>
-                </div>
-
-
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Research AI Engineer Intern</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">研究人工智慧工程師實習生</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">研究人工智能工程师实习生</h3>
-                
-
-                    <p class="text-lg text-gray-300 lang-en">AI Lab Limited	 | Aug 2024, May - Jun 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">人工智能研究所	 | 8月 2024, 5月 - 6月 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">人工智能研究所	 | 8月 2024, 5月 - 6月 2025</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Development of LLM tools, such as research and deployment of RAG for sentiment analysis on stock analysis using LLM models, Python and Docker</p>
-                    <p class="text-gray-400 mt-2 lang-en">Development of Application using local deployment of T2T, T2I and T2V models, working on tasks such as developing and updating image and video generation workflows, reducing generation time by 50%, and testing RAM/VRAM usage and UI/UX</p>
-                    <p class="text-gray-400 mt-2 lang-en">Assisted in developing financial analysis tool using Python and Xlsxwriter to create Excel files with graphs to look at company data and deploying on Azure</p>
-                    <p class="text-gray-400 mt-2 lang-en">Research on recent GenAI models and applications on the market and recent research papers, including testing Agentic RAG embedding and reranking models, writing documentation and presentation of findings</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">LLM 工具的開發，例如使用 LLM 模型、Python 和 Docker 研究和部署用於股票情緒分析的 RAG</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">使用本地部署的 T2T、T2I 和 T2V 模型開發應用程序，開發和更新映像和視訊生成工作流程、將生成時間縮短 50% 以及測試 RAM/VRAM 使用情況和 UI/UX 等</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">協助使用 Python 和 Xlsxwriter 開發財務分析工具，建立帶有圖表的 Excel 檔案來查看公司資料並部署在 Azure 上</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">研究市場上最新的 GenAI 模型和應用以及最近的研究論文，包括測試 Agentic RAG 嵌入和重新排序模型、撰寫文件和展示研究結果</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">LLM 工具的开发，例如使用 LLM 模型、Python 和 Docker 研究和部署用于股票情绪分析的 RAG</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">使用本地部署的 T2T、T2I 和 T2V 模型开发应用程序，开发和更新映像和视讯生成工作流程、将生成时间缩短 50% 以及测试 RAM/VRAM 使用情况和 UI/UX 等</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">协助使用 Python 和 Xlsxwriter 开发财务分析工具，建立带有图表的 Excel 档案来查看公司资料并部署在 Azure 上</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">研究市场上最新的 GenAI 模型和应用以及最近的研究论文，包括测试 Agentic RAG 嵌入和重新排序模型、撰写文件和展示研究结果</p>
-                </div>
-                
-                
-                <!-- Experience 2 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Teaching Assistant</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">助教</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">助教</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">2025</p>
-                    <p class="text-gray-400 mt-2 lang-en">Assisted Prof Alan Chow in teaching Introduction to Artificial Intelligence and Entrepreneurship to over 100+ Students in multiple universities, such as PolyU and HKUST about NLP and Programming in PyTorch</p>
-                    <p class="text-gray-400 mt-2 lang-en">Demonstrated LLM and Data Visualisation Technology for Executive Course for Corporate Globalization for HKU SPACE, in lessons regarding Artificial Intelligence and Business Applications </p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">協助周建新教授為香港理工大學、香港科技大學等多所大學的 100 多名學生教授人工智慧和創業入門課程，內容涉及 NLP 和 PyTorch 編程</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">在香港大學專業進修學院企業全球化高階主管課程中展示法學碩士和資料視覺化技術，涉及人工智慧和商業應用課程</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">协助周建新教授为香港理工大学、香港科技大学等多所大学的 100 多名学生教授人工智慧和创业入门课程，内容涉及 NLP 和 PyTorch 编程</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">在香港大学专业进修学院企业全球化高阶主管课程中展示法学硕士和资料视觉化技术，涉及人工智慧和商业应用课程</p>
-                </div>
-
-
-                <!-- Experience 3 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Part-Time STEM Tutor</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">兼職STEM導師</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">兼职STEM导师</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">Pigeon City Creative Computer Training Centre | Jan 2024 - Mar 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">博思創意	 | 1月 2024 - 3月 2025</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">博思创意	 | 1月 2024 - 3月 2025</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Teaching over 40 primary/secondary school students in STEM through building and coding through robotics machines, and using object recognition through Computer Vision to create games</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">透過建造和編碼機器人，以及使用電腦視覺進行物件辨識來創建遊戲，向 40 多名中小學生講授 STEM 課程</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">透过建造和编码机器人，以及使用电脑视觉进行物件辨识来创建游戏，向 40 多名中小学生讲授 STEM 课程</p>
-
-
-                </div>
-                <!-- Experience 4 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Secondary School STEM Team Leader</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中學 STEM 團隊領袖</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中學 STEM 團隊領袖</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | 2021-2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 2021-2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 2021-2023</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Worked with other team leaders to provide lessons in programming and game design to more than 80 primary students, including the coding, presentation and teaching using Scratch and Microsoft Makecode</p>
-                    <p class="text-gray-400 mt-2 lang-en">Participating in hosting events, such as school hackathons to provide 40+ students the opportunity to create ideas for new technologies. Assisted teams in developing presentations and coding for their ideas</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">與其他團隊領導合作，為 80 多名小學生提供程式設計和遊戲設計課程，包括使用 Scratch 和 Microsoft Makecode 進行程式設計、演示和教學</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">參與舉辦學校黑客馬拉松等活動，提供40多位學生創新科技創意的機會。協助團隊製作簡報並編寫程式碼</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">与其他团队领导合作，为 80 多名小学生提供程式设计和游戏设计课程，包括使用 Scratch 和 Microsoft Makecode 进行程式设计、演示和教学</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">参与举办学校黑客马拉松等活动，提供40多位学生创新科技创意的机会。协助团队制作简报并编写程式码</p>
-
-
-                </div>
-                <!-- Experience 5 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Secondary School Cafe Manager</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中學咖啡廳經理</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中学咖啡厅经理</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | 2017-2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 2017-2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 2017-2023</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Led teams to work in the school cafe, interacting with customers and working collaboratively to make and sell products, in addition to cleaning and preparation to over 100 customers daily</p>
-                    <p class="text-gray-400 mt-2 lang-en">Contacted suppliers to buy products and set prices for products</p>
-                    <p class="text-gray-400 mt-2 lang-en">Helped develop over 20 employee's skills in different areas such as teamwork and regulations</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">帶領團隊在學校咖啡館工作，與顧客互動，合作製作和銷售產品，此外每天還要清潔和準備超過 100 名顧客</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">聯絡供應商購買產品並設定產品價格</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hant hidden">幫助 20 多名員工培養團隊合作和法規等不同領域的技能</p>
-
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">带领团队在学校咖啡馆工作，与顾客互动，合作制作和销售产品，此外每天还要清洁和准备超过 100 名顾客</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">联络供应商购买产品并设定产品价格</p>
-                    <p class="text-gray-400 mt-2 lang-zh-hans hidden">帮助 20 多名员工培养团队合作和法规等不同领域的技能</p>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- White line separator -->
-            <hr class="border-t-2 border-white opacity-20">
-            
-        <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">My Projects</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">我編程的項目</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">我编程的项目</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project1.png" alt="Project 1" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project1.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">Uni-GNN Recreation</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Uni-GNN：重新實現</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hans hidden">Uni-GNN：重新实现</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">A modification of the IJCAI 2021 research paper “UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” with a customised models and report consolidating our findings. Made using Python and Pytorch</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一個使用Python和Pytorch更改 IJCAI 2021 研究論文 “UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” 裏面的AI模型的項目以及學習報告。</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一个使用Python和Pytorch更改 IJCAI 2021 研究论文“UniGNN: a Unified Framework for Graph and Hypergraph Neural Networks” 里面的AI模型的项目以及学习报告</p>
-
-                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/UniGNN-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 2 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project2.png" alt="Project 2" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project2.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">CVFS Project</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">CVFS 項目</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hans hidden">CVFS 项目</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">This is a an in-memory Virtual File System (VFS), named the Comp VFS (CVFS), which is made in Java and utilizes OOP concepts to simulate a file system. The application uses the Model-View-Controller Pattern in Designing the CVFS. </p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">使用Java和OOP建立的虛擬檔案系統，系統使用模型-视图-控制器（MVC）模式建立結構</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">使用Java和OOP建立的虚拟档案系统，系统使用模型-视图-控制器（MVC）模式建立结构</p>
-
-                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/CVFS-Project" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 3 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project3.png" alt="Project 3" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project3.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">Cops and Robbers Game</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">警察抓強盜遊戲</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">警察抓强盗游戏</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">A game that uses a graph to make a Cops and Robbers Game. Written using python and can be run on the command prompt interface</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一款使用圖形資料結構製作的「警察與強盜」遊戲。使用 Python 編寫，在命令提示字元介面上運行。</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一款使用圖形資料結構製作的「警察與強盜」遊戲。使用 Python 編寫，在命令提示字元介面上運行。</p>
-
-                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/Comp1002MiniProject" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-            </div>
-            <br>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 4 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project4.png" alt="Project 4" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project1.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">Python Minifier + Obsfucator</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Python Minifier + Obsfucator</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">Python Minifier + Obsfucator</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">A project that uses the python minifier and obsfucator to mess up python code automatically inside a directory without breaking the code. Uses Python and Selenium.</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">采用Python和Selenium，使用Python minifier 和 obsfucator 將Python代碼混淆的的軟件</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">采用Python和Selenium，使用Python minifier 和 obsfucator 将Python代码混淆的的软件</p>
-
-                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/Python-minify-obsfucator" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 5 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project5.png" alt="Project 5" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project2.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">RAM VRAM tracker</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">記憶體顯存追蹤器</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">记忆体显存追踪器</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">A simple program written in python that tracks RAM VRAM usage. Saves data into csv for easy data analysis.</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">一個用 Python 編寫的簡單程序，用於追蹤 RAM 和 VRAM 的使用情況。將資料儲存為 csv 文件，以便於資料分析。</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">一个用 Python 编写的简单程序，用于跟踪 RAM 和 VRAM 的使用情况。将数据保存为 csv 文件，以便于数据分析。</p>
-
-                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline ">Link to View Project</a>
-                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/RAM-VRAMTracker" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 6 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project6.png" alt="Project 6" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project3.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">MNIST CLassifier</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">MNIST 分類器</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">MNIST 分类器</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">MNIST Classifier using object detection to recognize numbers. Uses python and pytorch.</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">MNIST 分類器使用物體偵測來識別數字。使用 Python 和 PyTorch</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">MNIST 分类器使用物体检测来识别数字。使用 Python 和 PyTorch</p>
-
-                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/MNIST-Recreation" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-                </div>
-            </div>
-            <br>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 7 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project7.png" alt="Project 7" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project1.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en">Cantonese-Transcribe-Refinement Program</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">廣東話轉錄+精煉程式</h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden">广东话转录+精炼程式</h3>
-
-                    <p class="text-gray-400 mb-4 lang-en">A implementation of a Cantonese Transcription and Refinement workflow using Ollama/Transformers.</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden">使用 Ollama/Transformers 實現廣東話轉錄和精煉工作的程式</p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden">使用 Ollama/Transformers 实现广东话转录和精炼工作的程式</p>
-
-                    <a href="https://github.com/J71956/Cantonese-Transcribe-Refinement/" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/Cantonese-Transcribe-Refinement/" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/Cantonese-Transcribe-Refinement/" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 8 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project8.png" alt="Project 8" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project2.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en"></h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden"></h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden"></h3>
-
-                    <p class="text-gray-400 mb-4 lang-en"></p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden"></p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden"></p>
-
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline ">Link to View Project</a>
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-
-                </div>
-                <!-- Project 9 -->
-                <div class="project-card bg-gray-800 rounded-lg shadow-lg p-6" data-tilt>
-                    <!-- Project Image -->
-                    <img src="static/images/project9.png" alt="Project 9" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <!-- Place your project image in 'static/images/project3.jpg' -->
-                    <h3 class="text-xl font-semibold mb-2 lang-en"></h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden"></h3>
-                    <h3 class="text-xl font-semibold mb-2 lang-zh-hant hidden"></h3>
-
-                    <p class="text-gray-400 mb-4 lang-en"></p>
-                    <p class="text-gray-400 mb-4 lang-zh-hant hidden"></p>
-                    <p class="text-gray-400 mb-4 lang-zh-hans hidden"></p>
-
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-en" style="text-decoration: underline">Link to View Project</a>
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-zh-hant hidden" style="text-decoration: underline">點擊去看看這個項目吧！</a>
-                    <a href="https://github.com/J71956/" class="text-purple-400 hover:text-purple-300 lang-zh-hans hidden" style="text-decoration: underline">点击去看看这个项目吧！</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- White line separator -->
-    <hr class="border-t-2 border-white opacity-20">
-
-    <!-- Education Section -->
-    <section id="education" class="py-20 bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Education</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">學歷</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">学历</h2>
-            <div class="space-y-8">
-                <!-- Experience 1 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">Bachelor of Science in Financial Technology and Artificial Intelligence</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">金融科技及人工智慧(榮譽)理學士</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">金融科技及人工智能(荣誉)理学士</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">The Hong Kong Polytechnic University | Sep 2023 - Jul 2027</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">香港理工大學 | 7月 2023 - 7月 2027</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">香港理工大學 | 7月 2023 - 7月 2027</p>
-                </div>
-                <!-- Experience 2 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">International Baccalaureate</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">國際文憑</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">国际文凭</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | Jul 2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 7月 2023</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 7月 2023</p>
-                </div>
-                <!-- Experience 3 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">IGCSE</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">IGCSE</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">IGCSE</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">Po Leung Kuk Choi Kai Yau School | Aug 2021</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">保良局蔡繼有學校 | 8月 2021</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">保良局蔡繼有學校 | 8月 2021</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">IGCSE Certificate of 5A* and 6As </p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">總分35/45</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">总分35/45</p>
-                </div>
-                <!-- Experience 4 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg" data-tilt>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">IELTS</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">IGCSE 5A* 和 6A 證書</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">IGCSE 5A* 和 6A 证书</h3>
-
-                    <p class="text-lg text-gray-300 lang-en">IDP | Aug 2022</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">IDP | 8月 2022</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">IDP | 8月 2022</p>
-
-                    <p class="text-gray-400 mt-2 lang-en">Overall Score of 8</p>
-                    <p class="text-lg text-gray-300 lang-zh-hant hidden">總分8分</p>
-                    <p class="text-lg text-gray-300 lang-zh-hans hidden">总分8分</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- White line separator -->
-    <hr class="border-t-2 border-white opacity-20">
-
-    <!-- Awards and Certificates Section -->
-    <section id="awards" class="py-20 bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Awards and Certificates</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">獎項及證書</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">奖项及证书</h2>
-            <div class="space-y-8">
-                <!-- Award 1 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">NVIDIA Deep Learning Institute Certificate for Fundamentals of Deep Learning</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">NVIDIA 深度學習研究所基礎深度學習證書</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">NVIDIA 深度学习研究所基础深度学习证书</h3>
-                </div>
-                
-                <!-- Award 2 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">China Mainland, HK & Macao Digital Economy Innovation & Entrepreneurship Competition 2025 Silver Award</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">中國內地、香港及澳門數字經濟創新創業大賽 2025 銀獎</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">中国内地、香港及澳门数字经济创新创业大赛 2025 银奖</h3>
-                </div>
-
-                <!-- Award 3 -->
-                <div class="experience-card bg-gray-800 rounded-lg p-6 shadow-lg">
-                    <h3 class="text-xl font-semibold text-purple-400 lang-en">International Competition on AI in Education 2025 Merit Award (Stream 1, Higher Education)</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hant hidden">2025 年國際人工智能教育競賽優異獎（第一組，高等教育）</h3>
-                    <h3 class="text-xl font-semibold text-purple-400 lang-zh-hans hidden">2025 年国际人工智能教育竞赛优异奖（第一组，高等教育）</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Carousel Section -->
-    <section id="gallery" class="py-20 bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Gallery</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">圖庫</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">图库</h2>
-            <div class="carousel-container">
-                <div class="carousel" id="carousel">
-                    <!-- Carousel Item 1 -->
-                    <div class="carousel-item">
-                        <img src="static/images/HKU_SPACE_TA.JPG" alt="Gallery Image 1" class="w-full max-w-2xl h-96 object-cover rounded-lg mb-4 glow">
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-en">Teaching Assistant in HKU SPACE in demonstrating technology such as FinTech and AI for Executive Course for Corporate Globalization</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hant hidden">在香港大學專業進修學院擔任助教，為企業全球化高級課程展示金融科技和人工智能等技術</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hans hidden">在香港大学专业进修学院担任助教，为企业全球化高级课程展示金融科技和人工智能等技术</p>
-                    </div>
-                    <!-- Carousel Item 2 -->
-                    <div class="carousel-item">
-                        <img src="static/images/PolyU_TA.jpg" alt="Gallery Image 2" class="w-full max-w-2xl h-96 object-cover rounded-lg mb-4 glow">
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-en">Group Photo with PolyU Students in the Introduction to Artificial Intelligence and Entrepreneurship Course as a Nvidia Deep Learning Institute Teaching Assistant</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hant hidden">作為Nvidia深度學習研究所助教的身份，在香港理工大學人工智能與創業導論課程中與學生合影</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hans hidden">作为Nvidia深度学习研究所助教的身份，在香港理工大学人工智能与创业导论课程中与学生合影。</p>
-                    </div>
-                    <!-- Carousel Item 3 -->
-                    <div class="carousel-item">
-                        <img src="static/images/HKUST_TA.jpg" alt="Gallery Image 3" class="w-full max-w-2xl h-96 object-cover rounded-lg mb-4 glow">
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-en">Presenting lesson on Artificial Intelligence concepts in HKUST in the Introduction to Artificial Intelligence and Entrepreneurship Course as a Nvidia Deep Learning Institute Teaching Assistant</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hant hidden">作為Nvidia深度學習研究所助教的身份，在香港科技大學人工智能與創業導論課程中講授人工智能概念</p>
-                        <p class="text-lg text-gray-300 max-w-2xl text-center lang-zh-hans hidden">作為Nvidia深度學習研究所助教的身份，在香港科技大學人工智能與創業導論課程中講授人工智能概念</p>
-                    </div>
-                </div>
-                <div class="carousel-nav carousel-nav-prev" onclick="moveCarousel(-1)">&#10094;</div>
-                <div class="carousel-nav carousel-nav-next" onclick="moveCarousel(1)">&#10095;</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- White line separator -->
-    <hr class="border-t-2 border-white opacity-20">
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Skills</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">技能</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">技能</h2>
-            <!-- White line separator -->
-            <hr class="border-t-2 border-white opacity-20">
-            <br>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Programming Languages and Libraries</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">编程語言和函式庫</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">编程语言和库</h3>
-
-            <div class="flex flex-wrap justify-center gap-4">
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Python</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Pytorch</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Tensorflow</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Django</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">SQL</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">HTML</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">CSS</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Javascript</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Typescript</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Java</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">R</span>
-            </div>
-            <br>
-            <!-- White line separator -->
-            <hr class="border-t-2 border-white opacity-20">
-            <br>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Tools</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">工具</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">开发人员工具</h3>
-
-            <div class="flex flex-wrap justify-center gap-4">
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Git</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">VScode</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Azure</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">ComfyUI</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Forge</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Ollama</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">LMStudio</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Docker</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Microsoft 365</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">MCP</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Notion</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">SQLite</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">Canva</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow">PowerBI</span>
-            </div>
-            <br>
-            <!-- White line separator -->
-            <hr class="border-t-2 border-white opacity-20">
-            <br>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-en">Languages</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">語言</h3>
-            <h3 class="text-2xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">语言</h3>
-
-            <div class="flex flex-wrap justify-center gap-4">
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">Cantonese (Native)</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">Mandarin (Native)</span>
-                <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full glow ">English (Native)</span>
-            </div>
-            
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-en">Contact Me!</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hant hidden">聯絡方式</h2>
-            <h2 class="text-4xl font-bold text-center mb-12 neon-text lang-zh-hans hidden">联络方式</h2>
-            <div class="flex justify-center space-x-8">
-            <a href="mailto:shilohsiu0@gmail.com" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">Email</a>
-            <a href="https://github.com/J71956" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">GitHub</a>
-            <a href="https://www.linkedin.com/in/yau-shing-siu-368383225/" class="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-full glow hover:from-blue-500 hover:to-purple-500">Linkedin</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-6">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>© 2025 Siu Yau Shing. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- External Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
-    <script>
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        
-
-        // Particles.js configuration
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: '#3b82f6' },
-                shape: { type: 'circle' },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: '#3b82f6', opacity: 0.4, width: 1 },
-                move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out' }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
-                modes: { grab: { distance: 200, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 } }
-            },
-            retina_detect: true
-        });
-
-        // Carousel functionality
-        let currentIndex = 0;
-        const carousel = document.getElementById('carousel');
-        const items = carousel.children.length;
-        function moveCarousel(direction) {
-            currentIndex = (currentIndex + direction + items) % items;
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-    </script>
-    <!-- Language Switching Script -->
-    <script>
-    document.getElementById('language-switcher')?.addEventListener('change', function () {
-        const lang = this.value;
-
-        // Fade out currently visible elements
-        document.querySelectorAll('[class*="lang-"]:not(.hidden)').forEach(el => {
-            el.style.opacity = '0';
-            setTimeout(() => {
-                el.classList.add('hidden');
-            }, 300); // Wait for fade-out to finish
-        });
-
-        // After a short delay, fade in the new language
-        setTimeout(() => {
-            document.querySelectorAll(`.lang-${lang}`).forEach(el => {
-                el.classList.remove('hidden');
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                }, 50); // Small delay to ensure 'hidden' class is removed first
-            });
-        }, 300);
-    });
-</script>
-<script>
-    window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav a');
-
-    let current = '';
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - 200)) { // Adjust 200 to control when it activates
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
-</script>
+    <button type="button" class="nav-toggle" id="nav-toggle"
+            aria-expanded="false" aria-controls="nav-links"
+            aria-label="Open menu" data-i18n-attr="aria-label:a11y.menuOpen">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================================================================= hero -->
+<section class="section section--measured hero" id="home">
+  <div class="hero-canvas" aria-hidden="true"></div>
+  <div class="hero-bloom hero-bloom--a" aria-hidden="true"></div>
+  <div class="hero-bloom hero-bloom--b" aria-hidden="true"></div>
+  <canvas class="hero-motes" id="hero-motes" aria-hidden="true"></canvas>
+  <div class="hero-ghost ghost" aria-hidden="true">蕭佑丞</div>
+
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">Hong Kong · Waterloo · Barcelona</p>
+      <h1 class="t-hero hero-name" data-split data-i18n="hero.name">Siu Yau Shing</h1>
+      <p class="hero-alt" data-i18n="hero.alt">蕭佑丞 · Shiloh</p>
+      <p class="lede hero-lede" data-i18n="hero.lede">Year 4 BSc (Hons) Financial Technology and Artificial Intelligence at The Hong Kong Polytechnic University.</p>
+      <a class="btn hero-cta" href="https://github.com/J71956">
+        <span data-i18n="hero.cta">View my work on GitHub</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <figure class="hero-portrait">
+      <picture>
+        <source type="image/avif" srcset="assets/img/portrait-380.avif 380w, assets/img/portrait-760.avif 760w" sizes="(max-width: 900px) 60vw, 380px">
+        <source type="image/webp" srcset="assets/img/portrait-380.webp 380w, assets/img/portrait-760.webp 760w" sizes="(max-width: 900px) 60vw, 380px">
+        <img src="assets/img/portrait-380.jpg"
+             srcset="assets/img/portrait-380.jpg 380w, assets/img/portrait-760.jpg 760w"
+             sizes="(max-width: 900px) 60vw, 380px"
+             width="380" height="475" fetchpriority="high" decoding="async"
+             alt="Portrait of Siu Yau Shing" data-i18n-attr="alt:hero.portraitAlt">
+      </picture>
+    </figure>
+  </div>
+
+  <p class="hero-scroll" aria-hidden="true"><span data-i18n="hero.scroll">Scroll</span></p>
+</section>
+
+<!-- ================================================================ about -->
+<section class="section about" id="about">
+  <div class="ghost ghost--numeral" aria-hidden="true">01</div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="about.numeral">01</span>
+      <h2 class="t-section" data-i18n="about.heading">About</h2>
+    </div>
+
+    <p class="lede about-lede" data-words data-i18n="about.lede">I am Siu Yau Shing — Shiloh — a Year 4 BSc (Hons) student in Financial Technology and Artificial Intelligence at The Hong Kong Polytechnic University, most recently building AI infrastructure at Tranxfer in Barcelona.</p>
+
+    <div class="about-body stack" id="about-body">
+      <p class="u-measure" data-reveal>Most of my work has been about making AI systems hold up outside a notebook. At Tranxfer I built an asynchronous document-labelling microservice on Spring Boot and Vertex AI, where strict multi-tenant isolation and zero content retention were requirements rather than afterthoughts. At AI Lab I shipped RAG workflows and local model pipelines, and halved image and video generation time by profiling where the hardware was actually spending it.</p>
+      <p class="u-measure" data-reveal>That practical streak runs alongside a research one. On exchange at the University of Waterloo I used historical SCADA data to model wind turbine degradation — anomaly detection that transfers cleanly to financial risk. I have reimplemented hypergraph neural networks from an IJCAI paper, and built a fully offline RAG pipeline that pairs stylometric analysis with dense retrieval so a local model can write in a specific voice.</p>
+      <p class="u-measure" data-reveal>Beyond building, I am committed to demystifying AI. As a teaching assistant and STEM tutor I have taught over 100 learners — primary schoolers, university students, and corporate executives at HKU SPACE — computer vision, NLP and PyTorch, and just as importantly what these systems can and cannot do.</p>
+    </div>
+
+    <h3 class="eyebrow about-exploring-label" data-i18n="about.exploringLabel">Currently exploring</h3>
+    <ul class="exploring" id="about-exploring">
+      <li class="exploring-item" data-reveal><span class="rule exploring-rule" aria-hidden="true"></span><span>On-device AI and privacy-preserving LLMs</span></li>
+      <li class="exploring-item" data-reveal><span class="rule exploring-rule" aria-hidden="true"></span><span>Applications for inclusive human–AI interaction</span></li>
+      <li class="exploring-item" data-reveal><span class="rule exploring-rule" aria-hidden="true"></span><span>AI and technological literacy as a foundational modern skill</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- =========================================================== experience -->
+<section class="section experience" id="experience">
+  <div class="ghost ghost--numeral" aria-hidden="true">02</div>
+  <div class="container experience-grid">
+    <div class="experience-aside">
+      <div class="section-head">
+        <span class="numeral" data-i18n="experience.numeral">02</span>
+        <h2 class="t-section" data-i18n="experience.heading">Experience</h2>
+      </div>
+    </div>
+
+    <div class="experience-main">
+      <div class="experience-rail" aria-hidden="true"><span class="experience-rail-fill"></span></div>
+      <ol class="experience-list" id="experience-list"></ol>
+
+      <h3 class="eyebrow experience-earlier-label" id="experience-earlier-label">Earlier</h3>
+      <ol class="experience-earlier" id="experience-earlier"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= projects -->
+<section class="section section--measured projects" id="projects">
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="projects.numeral">03</span>
+      <h2 class="t-section" data-i18n="projects.heading">Projects</h2>
+    </div>
+  </div>
+  <div class="projects-viewport">
+    <div class="projects-track" id="projects-track"></div>
+  </div>
+</section>
+
+<!-- ============================================================ education -->
+<section class="section education" id="education">
+  <div class="ghost ghost--numeral" aria-hidden="true">04</div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="education.numeral">04</span>
+      <h2 class="t-section" data-i18n="education.heading">Education</h2>
+    </div>
+    <ol class="education-list" id="education-list"></ol>
+  </div>
+</section>
+
+<!-- ============================================================= exchange -->
+<section class="section exchange" id="exchange">
+  <div class="ghost ghost--numeral" aria-hidden="true">05</div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="exchange.numeral">05</span>
+      <h2 class="t-section" data-i18n="exchange.heading">Exchange and Study Abroad</h2>
+    </div>
+    <ol class="education-list" id="exchange-list"></ol>
+  </div>
+</section>
+
+<!-- =============================================================== awards -->
+<section class="section awards" id="awards">
+  <div class="ghost ghost--numeral" aria-hidden="true">06</div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="awards.numeral">06</span>
+      <h2 class="t-section" data-i18n="awards.heading">Awards and Certificates</h2>
+    </div>
+    <ul class="awards-list" id="awards-list"></ul>
+  </div>
+</section>
+
+<!-- ============================================================== gallery -->
+<section class="section section--measured gallery" id="gallery"
+         aria-roledescription="carousel" aria-label="Photo gallery"
+         data-i18n-attr="aria-label:a11y.galleryLabel">
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="gallery.numeral">07</span>
+      <h2 class="t-section" data-i18n="gallery.heading">In the Room</h2>
+    </div>
+  </div>
+
+  <!-- Arrows sit on the left and right edges of the strip itself, vertically
+       centred on the image band. Real <button>s, so the strip stays operable by
+       keyboard and on touch. -->
+  <div class="gallery-viewport">
+    <button type="button" class="gallery-btn gallery-btn--prev" id="gallery-prev"
+            aria-label="Previous image" data-i18n-attr="aria-label:a11y.prev">←</button>
+
+    <div class="gallery-track" id="gallery-track"></div>
+
+    <button type="button" class="gallery-btn gallery-btn--next" id="gallery-next"
+            aria-label="Next image" data-i18n-attr="aria-label:a11y.next">→</button>
+  </div>
+
+  <!-- Position is announced to screen readers but not shown: the strip itself
+       already makes progress obvious, and the counter added visual noise. -->
+  <p class="u-visually-hidden" id="gallery-status" aria-live="polite"></p>
+</section>
+
+<!-- =============================================================== skills -->
+<section class="section skills" id="skills">
+  <div class="ghost ghost--numeral" aria-hidden="true">08</div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="skills.numeral">08</span>
+      <h2 class="t-section" data-i18n="skills.heading">Capabilities</h2>
+    </div>
+    <div class="skills-groups" id="skills-groups"></div>
+  </div>
+</section>
+
+<!-- ============================================================== contact -->
+<section class="section contact" id="contact">
+  <div class="contact-bloom" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-head">
+      <span class="numeral" data-i18n="contact.numeral">09</span>
+      <h2 class="t-section" data-split data-i18n="contact.heading">Get in touch</h2>
+    </div>
+    <p class="lede contact-lede" data-reveal data-i18n="contact.lede">Open to graduate roles, internships and collaboration in AI, financial technology, and anything at the boundary between the two.</p>
+    <p class="meta contact-location" data-reveal data-i18n="contact.location">Hong Kong</p>
+    <ul class="contact-links" id="contact-links"></ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="meta" data-i18n="footer.copy">© 2026 Siu Yau Shing</p>
+    <p class="meta" data-i18n="footer.built">Hand-built. No frameworks.</p>
+  </div>
+</footer>
+
+<!-- ============================================================ templates -->
+<!-- Markup lives here so it stays inspectable and styleable; content.js
+     supplies only the data. Nothing is built by string concatenation. -->
+
+<template id="tpl-experience">
+  <li class="exp-card">
+    <span class="exp-marker" aria-hidden="true"></span>
+    <p class="meta exp-period"><span data-field="period"></span></p>
+    <h3 class="t-card exp-role" data-field="role"></h3>
+    <p class="meta exp-org"><span data-field="org"></span> · <span data-field="place"></span></p>
+    <ul class="exp-points" data-slot="points"></ul>
+  </li>
+</template>
+
+<template id="tpl-earlier">
+  <li class="exp-early">
+    <span class="exp-early-role" data-field="role"></span>
+    <span class="meta exp-early-org" data-field="org"></span>
+    <span class="meta exp-early-period" data-field="period"></span>
+  </li>
+</template>
+
+<template id="tpl-project">
+  <article class="project-card">
+    <div class="media project-media" data-slot="media"></div>
+    <p class="eyebrow project-meta" data-field="meta"></p>
+    <h3 class="t-card project-title" data-field="title"></h3>
+    <p class="project-blurb" data-field="blurb"></p>
+    <a class="link-underline project-link" data-field="link" href="#"><span data-field="linkLabel"></span></a>
+  </article>
+</template>
+
+<template id="tpl-project-more">
+  <article class="project-card project-card--more">
+    <a class="link-underline" data-field="link" href="#"><span data-field="linkLabel"></span> <span aria-hidden="true">→</span></a>
+  </article>
+</template>
+
+<template id="tpl-education">
+  <li class="edu-row">
+    <p class="meta edu-period" data-field="period"></p>
+    <div class="edu-body">
+      <h3 class="t-card edu-award" data-field="award"></h3>
+      <p class="meta edu-org" data-field="org"></p>
+      <p class="meta edu-note" data-field="note"></p>
+    </div>
+  </li>
+</template>
+
+<template id="tpl-award">
+  <li class="award-card">
+    <p class="meta award-year" data-field="year"></p>
+    <h3 class="t-card award-title" data-field="title"></h3>
+    <p class="meta award-org" data-field="org"></p>
+  </li>
+</template>
+
+<template id="tpl-gallery">
+  <figure class="gallery-figure">
+    <div class="media gallery-media" data-slot="media"></div>
+    <figcaption class="meta gallery-caption" data-field="caption"></figcaption>
+  </figure>
+</template>
+
+<template id="tpl-skill-group">
+  <div class="skill-group">
+    <h3 class="eyebrow skill-label" data-field="label"></h3>
+    <span class="rule skill-rule" data-reveal="wipe" aria-hidden="true"></span>
+    <ul class="chips" data-slot="chips"></ul>
+  </div>
+</template>
+
+<template id="tpl-contact">
+  <li class="contact-row">
+    <a class="contact-link link-underline" data-field="link" href="#">
+      <span class="meta contact-label" data-field="label"></span>
+      <span class="contact-value" data-field="value"></span>
+    </a>
+  </li>
+</template>
+
+<!-- ============================================================== scripts -->
+<script src="assets/js/content.js?v=1786814452"></script>
+<script src="assets/js/i18n.js?v=1786814452"></script>
+<script src="assets/js/nav.js?v=1786814452" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
+<script src="assets/js/motion.js?v=1786814452" defer></script>
+
 </body>
 </html>

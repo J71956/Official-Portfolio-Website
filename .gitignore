@@ -1,0 +1,26 @@
+# The Azure Static Web Apps workflow uploads the repo root verbatim
+# (app_location: "/", output_location: "."). Anything committed here ships
+# publicly. Keep personal documents out of this directory entirely.
+
+*.pdf
+
+# Image originals. The optimized derivatives in assets/img/ are what the site
+# serves; these full-size sources are kept locally only. GitHub Pages has no
+# equivalent of the Azure route guard, so anything committed here is public.
+static/
+
+# Local-only image optimization tooling — derivatives are committed, tools are not
+node_modules/
+package-lock.json
+package.json
+
+# Local tooling config, not site content
+.claude/
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.swp

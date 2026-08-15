@@ -1,0 +1,113 @@
+/* ---------------------------------------------------------------------------
+   tokens.css — the entire design system, as custom properties.
+
+   Nothing in this file selects anything. It only defines values, so it can be
+   read in devtools and from JS (getComputedStyle) by motion.js.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* ---- canvas -------------------------------------------------------- */
+  --c-void:      #060709;   /* deepest; page ground */
+  --c-base:      #0A0C10;   /* default section background */
+  --c-raise-1:   #101319;   /* cards, media placeholders */
+  --c-raise-2:   #161A22;   /* card hover, drawer */
+  --c-raise-3:   #1E232C;   /* chips, inputs */
+
+  /* ---- hairlines & scrims -------------------------------------------- */
+  --c-line:      rgba(255, 255, 255, .07);
+  --c-line-str:  rgba(255, 255, 255, .14);
+  --c-scrim:     rgba(6, 7, 9, .72);
+
+  /* ---- ink ----------------------------------------------------------- */
+  /* Warm-neutral whites, so the brass accent never reads as dirty. */
+  --c-ink:       #F3F1ED;   /* headings          9.6:1+ */
+  --c-ink-2:     #B9B6AF;   /* body              9.6:1  */
+  --c-ink-3:     #7C7A75;   /* meta, captions    4.9:1  — >=14px only */
+  --c-ink-4:     #4A4945;   /* ghost numerals, disabled */
+
+  /* ---- accent: brass. One accent, used sparingly. --------------------- */
+  --c-acc:       #D8A657;
+  --c-acc-hi:    #EFC684;
+  --c-acc-dim:   #8C6C34;
+  --c-acc-wash:  rgba(216, 166, 87, .10);
+
+  /* ---- type ---------------------------------------------------------- */
+  --f-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --f-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* System CJK only — a Noto CJK webfont would cost several megabytes. */
+  --f-cjk: "PingFang TC", "Hiragino Sans TC", "Microsoft JhengHei",
+           "Noto Sans CJK TC", "Source Han Sans TC", sans-serif;
+
+  /* Fluid scale: 1.20 at 360px -> 1.333 at 1440px */
+  --t-2xs:  clamp(.6875rem, .66rem + .12vw, .75rem);
+  --t-xs:   clamp(.75rem,   .72rem + .15vw, .8125rem);
+  --t-sm:   clamp(.875rem,  .84rem + .18vw, .9375rem);
+  --t-md:   clamp(1rem,     .96rem + .2vw,  1.0625rem);
+  --t-lg:   clamp(1.125rem, 1.05rem + .35vw, 1.3125rem);
+  --t-xl:   clamp(1.375rem, 1.22rem + .7vw,  1.75rem);
+  --t-2xl:  clamp(1.75rem,  1.45rem + 1.4vw, 2.5rem);
+  --t-3xl:  clamp(2.25rem,  1.6rem  + 2.9vw, 4rem);
+  --t-4xl:  clamp(2.75rem,  1.5rem  + 5.6vw, 6.5rem);   /* hero */
+  --t-mega: clamp(5rem,     2rem    + 14vw,  16rem);    /* ghost numerals */
+
+  --lh-tight: 1.04;
+  --lh-head:  1.15;
+  --lh-body:  1.65;
+  --ls-mega:    -.035em;
+  --ls-head:    -.02em;
+  --ls-eyebrow:  .18em;
+
+  /* ---- space --------------------------------------------------------- */
+  --s-1: .25rem;  --s-2: .5rem;  --s-3: .75rem; --s-4: 1rem;
+  --s-5: 1.5rem;  --s-6: 2rem;   --s-7: 3rem;   --s-8: 4rem;
+  --s-9: 6rem;    --s-10: 8rem;  --s-11: 12rem;
+
+  --pad-section: clamp(var(--s-8), 9vw, var(--s-11));
+  --gutter:      clamp(1.25rem, 5vw, 4rem);
+  --measure:     62ch;
+  --w-content:   1180px;
+  --w-wide:      1440px;
+
+  /* ---- radius -------------------------------------------------------- */
+  --r-xs: 2px; --r-sm: 6px; --r-md: 12px; --r-lg: 20px; --r-pill: 999px;
+
+  /* ---- elevation ----------------------------------------------------- */
+  /* Depth from stacked low-opacity shadow plus a hairline top highlight,
+     never from a coloured glow. */
+  --sh-1: 0 1px 2px rgba(0, 0, 0, .4);
+  --sh-2: 0 4px 12px rgba(0, 0, 0, .45), 0 1px 2px rgba(0, 0, 0, .4);
+  --sh-3: 0 18px 40px -12px rgba(0, 0, 0, .65), 0 4px 12px rgba(0, 0, 0, .4);
+  --sh-4: 0 40px 90px -24px rgba(0, 0, 0, .8), 0 8px 24px rgba(0, 0, 0, .45);
+  --sh-glow: 0 0 0 1px var(--c-acc-wash), 0 24px 60px -20px rgba(216, 166, 87, .18);
+  --edge-top: inset 0 1px 0 rgba(255, 255, 255, .06);
+
+  /* ---- motion -------------------------------------------------------- */
+  --e-out: cubic-bezier(.22, 1, .36, 1);    /* the house curve */
+  --e-io:  cubic-bezier(.65, .05, .36, 1);
+  --d-fast: 180ms; --d-base: 320ms; --d-slow: 640ms; --d-cine: 1100ms;
+
+  /* ---- depth ladder (mirrored in motion.js) -------------------------- */
+  --z-canvas:  -3;   /* L0 vignette, grain */
+  --z-bloom:   -2;   /* L1 ambient light */
+  --z-ghost:   -1;   /* L2 numerals, rails */
+  --z-content:  1;   /* L3 cards, text */
+  --z-media:    2;   /* L4 portrait, thumbnails */
+  --z-chrome:  50;   /* L5 nav, progress */
+  --z-drawer:  90;
+
+  /* Published by nav.js via ResizeObserver, so scroll-margin stays correct. */
+  --nav-h: 68px;
+}
+
+/* Fraunces carries no CJK glyphs, and falling through to a system serif gives
+   inconsistent Song/Ming rendering across platforms. Chinese locales get a
+   clean sans treatment instead, with tracking and leading corrected. */
+:root:lang(zh-Hant),
+:root:lang(zh-Hans) {
+  --f-display: var(--f-cjk);
+  --f-body: var(--f-cjk);
+  --ls-mega: 0;
+  --ls-head: 0;
+  --lh-tight: 1.25;
+  --lh-head: 1.35;
+}

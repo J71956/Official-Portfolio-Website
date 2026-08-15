@@ -1,0 +1,698 @@
+/* ---------------------------------------------------------------------------
+   sections.css — per-section composition.
+
+   Layout here must stand on its own: every section is fully readable before
+   motion.js runs, and stays readable if it never runs.
+--------------------------------------------------------------------------- */
+
+/* ================================================== chrome — nav, progress */
+
+.progress-rail {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: calc(var(--z-chrome) + 1);
+  pointer-events: none;
+}
+
+.progress-bar {
+  display: block;
+  height: 100%;
+  background: var(--c-acc);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-chrome);
+  transition: background-color var(--d-base) var(--e-out),
+              border-color var(--d-base) var(--e-out);
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-solid {
+  background: var(--c-scrim);
+  border-bottom-color: var(--c-line);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav.is-solid { background: var(--c-base); }
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding-block: var(--s-5);
+}
+
+.nav-brand { display: flex; flex-direction: column; line-height: 1.2; }
+.nav-brand-name { font-family: var(--f-display); font-size: var(--t-md); color: var(--c-ink); }
+.nav-brand-alt { font-size: var(--t-2xs); color: var(--c-ink-3); letter-spacing: .04em; }
+
+.nav-links { display: flex; align-items: center; gap: var(--s-6); }
+.nav-links > ul { display: flex; align-items: center; gap: var(--s-5); }
+
+.nav-link {
+  position: relative;
+  font-size: var(--t-sm);
+  color: var(--c-ink-3);
+  padding-block: var(--s-2);
+  transition: color var(--d-fast) var(--e-out);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: var(--c-acc);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--d-base) var(--e-out);
+}
+
+.nav-link.is-active { color: var(--c-ink); }
+.nav-link.is-active::after { transform: scaleX(1); }
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link:hover { color: var(--c-ink); }
+}
+
+.locale { display: flex; gap: 1px; background: var(--c-line); border-radius: var(--r-pill); overflow: hidden; }
+
+.locale-btn {
+  padding: var(--s-2) var(--s-3);
+  min-width: 38px;
+  font-size: var(--t-xs);
+  color: var(--c-ink-3);
+  background: var(--c-raise-1);
+  border: 0;
+  cursor: pointer;
+  transition: color var(--d-fast) var(--e-out), background-color var(--d-fast) var(--e-out);
+}
+
+.locale-btn[aria-pressed="true"] { color: var(--c-void); background: var(--c-acc); }
+
+@media (hover: hover) and (pointer: fine) {
+  .locale-btn:not([aria-pressed="true"]):hover { color: var(--c-ink); background: var(--c-raise-3); }
+}
+
+/* --- hamburger ----------------------------------------------------------- */
+
+.nav-toggle {
+  display: none;
+  width: 44px; height: 44px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  z-index: calc(var(--z-drawer) + 1);
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px; height: 1.5px;
+  background: var(--c-ink);
+  transition: transform var(--d-base) var(--e-out), opacity var(--d-fast) var(--e-out);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:first-child { transform: translateY(3.75px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:last-child  { transform: translateY(-3.75px) rotate(-45deg); }
+
+/* --- drawer -------------------------------------------------------------- */
+
+@media (max-width: 899px) {
+  .nav-toggle { display: flex; }
+  .nav-brand-alt { display: none; }
+
+  .nav-links {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-drawer);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--s-7);
+    padding: var(--s-9) var(--gutter);
+    background: var(--c-base);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform var(--d-slow) var(--e-out), visibility 0s linear var(--d-slow);
+  }
+
+  .nav-links.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform var(--d-slow) var(--e-out), visibility 0s;
+  }
+
+  .nav-links > ul { flex-direction: column; align-items: flex-start; gap: var(--s-4); }
+  .nav-link { font-family: var(--f-display); font-size: var(--t-xl); color: var(--c-ink); }
+  .nav-link::after { display: none; }
+  .nav-link.is-active { color: var(--c-acc); }
+}
+
+/* ==================================================================== hero */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding-block: calc(var(--nav-h) + var(--s-8)) var(--s-9);
+}
+
+/* L0 — vignette plus a fine grain, both purely decorative. */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-canvas);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(216, 166, 87, .05), transparent 55%),
+    radial-gradient(100% 100% at 50% 100%, rgba(0, 0, 0, .6), transparent 60%),
+    var(--c-void);
+}
+
+.hero-canvas::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  opacity: .035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  30% { transform: translate(3%, -2%); }
+  50% { transform: translate(-1%, 2%); }
+  70% { transform: translate(2%, 3%); }
+  90% { transform: translate(-3%, 1%); }
+}
+
+/* L1 — ambient light. Depth from blur and colour, never from text-shadow. */
+.hero-bloom {
+  position: absolute;
+  z-index: var(--z-bloom);
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.hero-bloom--a {
+  width: 46vw; height: 46vw;
+  top: -8vw; right: -6vw;
+  background: rgba(216, 166, 87, .16);
+}
+
+.hero-bloom--b {
+  width: 38vw; height: 38vw;
+  bottom: -10vw; left: -8vw;
+  background: rgba(64, 92, 148, .18);
+}
+
+.hero-motes {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-bloom);
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.hero-ghost {
+  top: 50%;
+  right: -4vw;
+  transform: translateY(-50%);
+  opacity: .05;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(var(--s-6), 6vw, var(--s-9));
+}
+
+.hero-eyebrow { margin-block-end: var(--s-5); }
+
+/* The name is the headline. A tagline above it competed for the same
+   attention and pushed the actual credentials below the fold. The romanised
+   and Chinese forms are split across two lines: set as one string they broke
+   mid-name at display size and orphaned "· Shiloh". */
+.hero-name { margin-block-end: var(--s-3); max-width: 12ch; }
+
+.hero-alt {
+  font-size: var(--t-lg);
+  color: var(--c-ink-3);
+  letter-spacing: .02em;
+  margin-block-end: var(--s-5);
+}
+
+.hero-lede { margin-block-end: var(--s-6); max-width: 46ch; }
+
+/* Masked per-line entrance. The wrapper clips; motion.js slides the inner.
+   The tight display line-height puts descenders (g, y, p) below the line box,
+   where overflow:hidden was slicing them off. The padding extends the visible
+   area downward and the negative margin cancels it out of the layout, so
+   nothing shifts. The start offset is 130% rather than 110% so the waiting
+   line still clears that extra space instead of peeking through it. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-block-end: .18em;
+  margin-block-end: -.18em;
+}
+
+.line-inner { display: block; }
+.motion-on [data-split] .line-inner { transform: translateY(130%); }
+
+.hero-portrait {
+  position: relative;
+  z-index: var(--z-media);
+  width: clamp(220px, 26vw, 380px);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-4);
+  /* Dissolve the lower edge into the canvas rather than ending on a hard line. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+
+.hero-portrait img { width: 100%; height: 100%; object-fit: cover; }
+.motion-on .hero-portrait { clip-path: inset(100% 0 0 0); }
+
+.hero-scroll {
+  position: relative;
+  z-index: var(--z-content);
+  margin-block-start: var(--s-9);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+  text-align: center;
+}
+
+@media (max-width: 899px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-portrait { order: -1; width: clamp(180px, 46vw, 260px); }
+  .hero-name { max-width: none; }
+  .hero-ghost { display: none; }
+}
+
+/* =================================================================== about */
+
+.ghost--numeral { top: var(--s-6); right: var(--gutter); }
+
+.about-lede { max-width: 40ch; font-size: var(--t-xl); color: var(--c-ink); margin-block-end: var(--s-8); }
+
+/* Word-by-word scroll lighting. Resting state is dim; motion.js scrubs it up. */
+.about-lede .w { display: inline-block; }
+.motion-on .about-lede .w { opacity: .22; filter: blur(4px); }
+
+.about-body { --flow: var(--s-5); margin-block-end: var(--s-9); }
+
+.about-exploring-label { display: block; margin-block-end: var(--s-5); }
+
+.exploring { display: grid; gap: var(--s-4); max-width: var(--measure); }
+
+.exploring-item {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  color: var(--c-ink-2);
+}
+
+.exploring-rule { width: 3rem; }
+
+/* ============================================================== experience */
+
+.experience-grid { display: grid; grid-template-columns: 1fr; gap: var(--s-7); }
+
+.experience-main { position: relative; padding-inline-start: var(--s-6); }
+
+.experience-rail {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  background: var(--c-line);
+}
+
+.experience-rail-fill {
+  display: block;
+  width: 100%; height: 100%;
+  background: var(--c-acc-dim);
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+.experience-list { display: grid; gap: var(--s-8); }
+
+.exp-card { position: relative; }
+
+.exp-marker {
+  position: absolute;
+  inset-inline-start: calc(var(--s-6) * -1);
+  top: .7em;
+  width: 7px; height: 7px;
+  margin-inline-start: -3px;
+  border-radius: 50%;
+  background: var(--c-raise-3);
+  transition: background-color var(--d-base) var(--e-out);
+}
+
+.exp-card.is-lit .exp-marker { background: var(--c-acc); }
+
+.exp-period { color: var(--c-acc-dim); margin-block-end: var(--s-2); }
+.exp-role { margin-block-end: var(--s-1); }
+.exp-org { margin-block-end: var(--s-4); }
+
+.exp-points { display: grid; gap: var(--s-3); max-width: var(--measure); }
+
+.exp-points li {
+  position: relative;
+  padding-inline-start: var(--s-5);
+  color: var(--c-ink-2);
+}
+
+.exp-points li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: .7em;
+  width: 6px; height: 1px;
+  background: var(--c-acc-dim);
+}
+
+/* Earlier roles: present, but never competing with the four main entries. */
+.experience-earlier-label { display: block; margin-block: var(--s-9) var(--s-5); }
+
+.experience-earlier { display: grid; gap: var(--s-3); }
+
+.exp-early {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-4);
+  padding-block: var(--s-2);
+  color: var(--c-ink-3);
+  border-block-start: 1px solid var(--c-line);
+}
+
+.exp-early-role { color: var(--c-ink-2); font-size: var(--t-sm); }
+.exp-early-period { margin-inline-start: auto; }
+
+@media (min-width: 1024px) {
+  .experience-grid { grid-template-columns: 18rem minmax(0, 1fr); gap: var(--s-8); }
+  /* Sticky, not pinned: no pin-spacer, no measurement jank. */
+  .experience-aside { position: sticky; top: 22vh; align-self: start; }
+  .experience-aside .section-head { margin-block-end: 0; }
+}
+
+/* ================================================================ projects */
+
+/* A plain responsive grid, deliberately. A pinned horizontal track here meant
+   roughly 3,000px of hijacked vertical scroll on the site's main content
+   section — and it made nine projects harder to scan, not easier. Depth comes
+   from the staggered reveal and the in-frame image parallax instead. */
+.projects-viewport { position: relative; margin-block-start: var(--s-7); }
+
+/* Constrained to the same measure as every other section. Without this the
+   grid ran flush to the viewport edge while the heading above it was inset. */
+.projects-track {
+  display: grid;
+  gap: var(--s-7) var(--s-6);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  max-width: var(--w-content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Text-only cards. A brass hairline across the top gives the grid its rhythm
+   in place of the image, and carries the hover state. */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid var(--c-line);
+  transition: border-color var(--d-base) var(--e-out);
+}
+
+.project-media { aspect-ratio: 16 / 10; margin-block-end: var(--s-2); }
+
+.project-media img { transition: transform var(--d-slow) var(--e-out); }
+
+.project-meta { color: var(--c-acc-dim); }
+.project-blurb { font-size: var(--t-sm); color: var(--c-ink-2); }
+.project-link { align-self: flex-start; margin-block-start: auto; padding-block-start: var(--s-3); font-size: var(--t-sm); color: var(--c-ink); }
+
+.project-card--more {
+  justify-content: center;
+  align-items: flex-start;
+  padding-block: var(--s-5);
+  font-family: var(--f-display);
+  font-size: var(--t-lg);
+  color: var(--c-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover { border-block-start-color: var(--c-acc-dim); }
+  .project-card:hover .project-media img { transform: scale(1.04); }
+}
+
+/* =============================================================== education */
+
+.education-list { display: grid; gap: 0; }
+
+.edu-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-2);
+  padding-block: var(--s-5);
+  border-block-start: 1px solid var(--c-line);
+}
+
+.edu-row:last-child { border-block-end: 1px solid var(--c-line); }
+
+.edu-period { color: var(--c-acc-dim); }
+.edu-award { margin-block-end: var(--s-1); }
+.edu-note { color: var(--c-ink-3); }
+
+@media (min-width: 768px) {
+  .edu-row { grid-template-columns: 14rem minmax(0, 1fr); gap: var(--s-6); }
+}
+
+/* ================================================================== awards */
+
+.awards-list {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.award-card {
+  padding: var(--s-5);
+  background: var(--c-raise-1);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-2), var(--edge-top);
+  transition: border-color var(--d-base) var(--e-out),
+              box-shadow var(--d-base) var(--e-out),
+              background-color var(--d-base) var(--e-out);
+}
+
+.award-year { color: var(--c-acc-dim); margin-block-end: var(--s-3); }
+.award-title { font-size: var(--t-lg); margin-block-end: var(--s-2); }
+
+@media (hover: hover) and (pointer: fine) {
+  .award-card:hover {
+    background: var(--c-raise-2);
+    border-color: var(--c-acc-dim);
+    box-shadow: var(--sh-glow);
+  }
+}
+
+/* ================================================================= gallery */
+
+/* Figure width, and the height of the image band derived from it. The arrows
+   centre on that band rather than on the whole track, so they land on the
+   pictures instead of drifting down towards the captions. */
+.gallery {
+  --gal-w: min(86vw, 34rem);
+  --gal-band: calc(var(--gal-w) * 3 / 4);
+  /* The inline offset of the container's content edge. The strip still bleeds
+     off the right, but it now starts flush with the section heading instead of
+     at a narrower gutter of its own. Percentages resolve against
+     .gallery-viewport, which is the positioning context for the arrows too, so
+     the same value aligns both. */
+  --gal-inset: max(var(--gutter), calc((100% - var(--w-content)) / 2 + var(--gutter)));
+}
+
+.gallery-viewport { position: relative; margin-block-start: var(--s-7); }
+
+.gallery-track {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+  padding-inline: var(--gal-inset);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-track::-webkit-scrollbar { display: none; }
+
+/* The gallery stays a native scroll-snap strip at every width: photographs
+   genuinely suit a strip, and a native scroller keeps the page's vertical
+   scroll untouched, works with a trackpad swipe, and stays keyboard-operable. */
+
+.gallery-figure {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  width: var(--gal-w);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.gallery-figure.is-portrait { width: min(70vw, 22rem); }
+
+.gallery-media {
+  aspect-ratio: var(--ar, 4 / 3);
+  box-shadow: var(--sh-3);
+}
+
+.gallery-caption { max-width: 44ch; color: var(--c-ink-3); }
+
+.gallery-btn {
+  position: absolute;
+  top: calc(var(--gal-band) / 2);
+  transform: translateY(-50%);
+  z-index: var(--z-media);
+  width: 48px; height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: var(--t-lg);
+  color: var(--c-ink);
+  /* Sits over photography, so it needs its own ground and a blur to stay
+     legible against whatever is behind it. */
+  background: var(--c-scrim);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  border: 1px solid var(--c-line-str);
+  border-radius: 50%;
+  box-shadow: var(--sh-3);
+  cursor: pointer;
+  transition: border-color var(--d-fast) var(--e-out),
+              color var(--d-fast) var(--e-out),
+              opacity var(--d-fast) var(--e-out);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .gallery-btn { background: var(--c-raise-2); }
+}
+
+/* Straddle the edges of the image band, which now starts at the container's
+   content edge rather than at a narrower gutter. */
+.gallery-btn--prev { left: max(var(--s-2), calc(var(--gal-inset) - 24px)); }
+.gallery-btn--next { right: max(var(--s-2), calc(var(--gal-inset) - 24px)); }
+
+/* Kept in the layout rather than hidden, so the arrows never shift position
+   when you reach either end of the strip. */
+.gallery-btn:disabled { opacity: .4; cursor: default; }
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-btn:not(:disabled):hover { color: var(--c-acc-hi); border-color: var(--c-acc); }
+}
+
+
+/* ================================================================== skills */
+
+.skills-groups { display: grid; gap: var(--s-8); }
+
+.skill-label { display: block; margin-block-end: var(--s-3); }
+.skill-rule { display: block; width: 100%; margin-block-end: var(--s-5); }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); }
+
+.chip {
+  padding: var(--s-2) var(--s-4);
+  font-size: var(--t-sm);
+  color: var(--c-ink-2);
+  background: var(--c-raise-1);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-pill);
+}
+
+/* ================================================================= contact */
+
+.contact { position: relative; overflow: hidden; }
+
+.contact-bloom {
+  position: absolute;
+  z-index: var(--z-bloom);
+  left: 50%;
+  bottom: -30vw;
+  width: 70vw; height: 44vw;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  filter: blur(100px);
+  background: rgba(216, 166, 87, .13);
+  pointer-events: none;
+}
+
+.contact .container { position: relative; z-index: var(--z-content); }
+
+.contact-lede { margin-block-end: var(--s-3); }
+.contact-location { margin-block-end: var(--s-8); }
+
+.contact-links { display: grid; }
+
+.contact-row { border-block-start: 1px solid var(--c-line); }
+.contact-row:last-child { border-block-end: 1px solid var(--c-line); }
+
+.contact-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-3) var(--s-5);
+  padding-block: var(--s-5);
+  width: 100%;
+}
+
+.contact-label { flex: 0 0 6rem; color: var(--c-acc-dim); }
+
+.contact-value {
+  font-family: var(--f-display);
+  font-size: var(--t-lg);
+  color: var(--c-ink);
+}
+
+/* ================================================================== footer */
+
+.footer { border-block-start: 1px solid var(--c-line); padding-block: var(--s-6); }
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
