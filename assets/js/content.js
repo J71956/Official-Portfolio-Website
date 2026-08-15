@@ -73,7 +73,7 @@ SITE.content = {};
 SITE.content.en = {
   meta: {
     title: 'Siu Yau Shing — AI and Financial Technology',
-    desc: 'Year 4 BSc (Hons) Financial Technology and Artificial Intelligence at PolyU. Building systems where people and AI think together.'
+    desc: 'Year 4 BSc (Hons) Financial Technology and Artificial Intelligence at PolyU. Recently a technical intern at Tranxfer in Barcelona, building LLM and RAG systems.'
   },
   brand: { name: 'Siu Yau Shing', short: 'SYS', alt: '蕭佑丞 · Shiloh' },
   nav: {
@@ -83,7 +83,6 @@ SITE.content.en = {
   },
   hero: {
     eyebrow: 'Hong Kong · Waterloo · Barcelona',
-    title: 'Building systems where people and AI think together.',
     name: 'Siu Yau Shing',
     alt: '蕭佑丞 · Shiloh',
     lede: 'Year 4 BSc (Hons) Financial Technology and Artificial Intelligence at The Hong Kong Polytechnic University.',
@@ -325,7 +324,7 @@ SITE.content.en = {
 SITE.content['zh-Hant'] = {
   meta: {
     title: '蕭佑丞 — 人工智慧與金融科技',
-    desc: '香港理工大學金融科技及人工智能（榮譽）理學士四年級。建構人與人工智慧共同思考的系統。'
+    desc: '香港理工大學金融科技及人工智能（榮譽）理學士四年級。近期於巴塞隆納的 Tranxfer 擔任技術實習生，建構大型語言模型與 RAG 系統。'
   },
   brand: { name: '蕭佑丞', short: '蕭佑丞', alt: 'Siu Yau Shing · Shiloh' },
   nav: {
@@ -335,7 +334,6 @@ SITE.content['zh-Hant'] = {
   },
   hero: {
     eyebrow: '香港 · 滑鐵盧 · 巴塞隆納',
-    title: '建構人與人工智慧共同思考的系統。',
     name: '蕭佑丞',
     alt: 'Siu Yau Shing · Shiloh',
     lede: '香港理工大學金融科技及人工智能（榮譽）理學士四年級。',
@@ -577,7 +575,7 @@ SITE.content['zh-Hant'] = {
 SITE.content['zh-Hans'] = {
   meta: {
     title: '萧佑丞 — 人工智能与金融科技',
-    desc: '香港理工大学金融科技及人工智能（荣誉）理学士四年级。构建人与人工智能共同思考的系统。'
+    desc: '香港理工大学金融科技及人工智能（荣誉）理学士四年级。近期于巴塞罗那的 Tranxfer 担任技术实习生，构建大型语言模型与 RAG 系统。'
   },
   brand: { name: '萧佑丞', short: '萧佑丞', alt: 'Siu Yau Shing · Shiloh' },
   nav: {
@@ -587,7 +585,6 @@ SITE.content['zh-Hans'] = {
   },
   hero: {
     eyebrow: '香港 · 滑铁卢 · 巴塞罗那',
-    title: '构建人与人工智能共同思考的系统。',
     name: '萧佑丞',
     alt: 'Siu Yau Shing · Shiloh',
     lede: '香港理工大学金融科技及人工智能（荣誉）理学士四年级。',
