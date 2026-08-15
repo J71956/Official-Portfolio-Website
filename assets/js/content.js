@@ -25,7 +25,7 @@ SITE.data = {
      terminal output that read as noise at card size. img stays in the shape so
      a card can carry one later — the renderer omits the frame when it is null. */
   projects: {
-    'wind-turbine':      { img: null, w: 640, h: 400, href: null },
+    'wind-turbine':      { img: null, w: 640, h: 400, href: 'https://github.com/J71956/MSE456-ML-Project' },
     'unignn':            { img: null, w: 640, h: 400, href: 'https://github.com/J71956/UniGNN-Recreation' },
     'writing-style-rag': { img: null, w: 640, h: 400, href: 'https://github.com/J71956/WritingStyle' },
     'cantonese':         { img: null, w: 640, h: 400, href: 'https://github.com/J71956/Cantonese-Transcribe-Refinement' },
