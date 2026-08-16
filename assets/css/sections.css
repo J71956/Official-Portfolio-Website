@@ -317,7 +317,6 @@
 
 /* =================================================================== about */
 
-.ghost--numeral { top: var(--s-6); right: var(--gutter); }
 
 .about-lede { max-width: 40ch; font-size: var(--t-xl); color: var(--c-ink); margin-block-end: var(--s-8); }
 
@@ -537,12 +536,6 @@
 .gallery {
   --gal-w: min(86vw, 34rem);
   --gal-band: calc(var(--gal-w) * 3 / 4);
-  /* The inline offset of the container's content edge. The strip still bleeds
-     off the right, but it now starts flush with the section heading instead of
-     at a narrower gutter of its own. Percentages resolve against
-     .gallery-viewport, which is the positioning context for the arrows too, so
-     the same value aligns both. */
-  --gal-inset: max(var(--gutter), calc((100% - var(--w-content)) / 2 + var(--gutter)));
 }
 
 .gallery-viewport { position: relative; margin-block-start: var(--s-7); }
@@ -551,7 +544,6 @@
   display: flex;
   align-items: flex-start;
   gap: var(--s-5);
-  padding-inline: var(--gal-inset);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -610,10 +602,10 @@
   .gallery-btn { background: var(--c-raise-2); }
 }
 
-/* Straddle the edges of the image band, which now starts at the container's
-   content edge rather than at a narrower gutter. */
-.gallery-btn--prev { left: max(var(--s-2), calc(var(--gal-inset) - 24px)); }
-.gallery-btn--next { right: max(var(--s-2), calc(var(--gal-inset) - 24px)); }
+/* Straddle the edges of the strip. The offset is clamped against the gutter so
+   the buttons never reach past it into the viewport edge on narrow screens. */
+.gallery-btn--prev { left: max(-24px, calc(var(--gutter) * -1)); }
+.gallery-btn--next { right: max(-24px, calc(var(--gutter) * -1)); }
 
 /* Kept in the layout rather than hidden, so the arrows never shift position
    when you reach either end of the strip. */
