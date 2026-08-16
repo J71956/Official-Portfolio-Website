@@ -602,10 +602,20 @@
   .gallery-btn { background: var(--c-raise-2); }
 }
 
-/* Straddle the edges of the strip. The offset is clamped against the gutter so
-   the buttons never reach past it into the viewport edge on narrow screens. */
-.gallery-btn--prev { left: max(-24px, calc(var(--gutter) * -1)); }
-.gallery-btn--next { right: max(-24px, calc(var(--gutter) * -1)); }
+/* Straddle the edges of the strip. Only above 900px, where the gutter has
+   grown past the 24px overhang with room to spare. */
+.gallery-btn--prev { left: -24px; }
+.gallery-btn--next { right: -24px; }
+
+/* Narrower than that the gutter is too tight to straddle — at phone widths it
+   is only 20px, so the buttons would press flat against the screen edge. They
+   tuck inside the strip instead, at the 44px minimum touch target. Shares the
+   nav's breakpoint so the layout changes character in one place, not two. */
+@media (max-width: 899px) {
+  .gallery-btn { width: 44px; height: 44px; }
+  .gallery-btn--prev { left: var(--s-3); }
+  .gallery-btn--next { right: var(--s-3); }
+}
 
 /* Kept in the layout rather than hidden, so the arrows never shift position
    when you reach either end of the strip. */
